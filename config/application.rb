@@ -18,16 +18,16 @@ module IdeaboardApi
     config.load_defaults 5.2
 
     config.api_only = true
-     config.middleware.insert_before 0, Rack::Cors do
-      allow do
-        origins 'https://ideadocs-app.herokuapp.com/'
-        resource '*',
-        headers: :any,
-        :expose => ['access-token', 'expiry', 'token-type', 'uid', 'client'],
-        methods: [:get, :post, :patch,:put, :delete, :options]
-      end
-    end
+    #  config.middleware.insert_before 0, Rack::Cors do
+    #   allow do
+    #     origins 'https://ideadocs-app.herokuapp.com/'
+    #     resource '*',
+    #     headers: :any,
+    #     :expose => ['access-token', 'expiry', 'token-type', 'uid', 'client'],
+    #     methods: [:get, :post, :patch,:put, :delete, :options]
+    #   end
+    # end
 
-    config.action_cable.mount_path = '/cable'
+    # config.action_cable.mount_path = '/cable'
   end
 end
