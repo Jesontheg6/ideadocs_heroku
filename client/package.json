@@ -3,9 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:3001",
-  "engines": {
-    "node": "11.2.0"
-  },
   "dependencies": {
     "actioncable": "^5.2.2-1",
     "axios": "^0.18.0",
