@@ -1,56 +1,25 @@
 {
-  "name": "ideaboard",
-  "version": "0.1.0",
-  "private": true,
-  "proxy": "http://localhost:3001",
-  "engines": {
-    "node": "11.2.0"
-  },
-  "dependencies": {
-    "actioncable": "^5.2.2-1",
-    "axios": "^0.18.0",
-    "bootstrap": "^4.3.1",
-    "firebase": "^6.0.2",
-    "helper": "^0.0.13",
-    "http-proxy-middleware": "^0.19.1",
-    "immutability": "^1.0.2",
-    "immutability-helper": "^3.0.0",
-    "jquery": "^3.3.1",
-    "react": "^16.8.6",
-    "react-actioncable-provider": "^2.0.0",
-    "react-bootstrap": "^1.0.0-beta.8",
-    "react-color": "^2.17.0",
-    "react-dom": "^16.8.6",
-    "react-router-dom": "5.0.0",
-    "react-scripts": "^2.1.8",
-    "react-transition-group": "^2.9.0",
-    "semantic-ui-react": "^0.87.1"
+  "name": "ideadocs-api",
+  "version": "1.0.0",
+  "description": "This README would normally document whatever steps are necessary to get the application up and running.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
   },
   "scripts": {
     "build": "cd client && npm install && npm run build && cd ..",
     "deploy": "cp -a client/build/. public/",
     "postinstall": "npm run build && npm run deploy && echo 'Client built!'"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
-  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
-  "main": "index.js",
-  "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Jesontheg6/Ideadocs-client.git"
+    "url": "git+https://github.com/Jesontheg6/Ideadocs-API.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Jesontheg6/Ideadocs-client/issues"
+    "url": "https://github.com/Jesontheg6/Ideadocs-API/issues"
   },
-  "homepage": "https://github.com/Jesontheg6/Ideadocs-client#readme"
+  "homepage": "https://github.com/Jesontheg6/Ideadocs-API#readme"
 }
