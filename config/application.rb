@@ -6,7 +6,7 @@ require 'active_job/railtie'
 require 'active_record/railtie'
 require 'active_storage/engine'
 require 'action_controller/railtie'
-# require 'action_mailer/railtie'
+require 'action_mailer/railtie'
 require 'action_view/railtie'
 require 'action_cable/engine'
 require 'rails/test_unit/railtie'
@@ -20,7 +20,7 @@ module IdeaboardApi
     config.api_only = true
      config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins '*'
+        origins 'http://localhost:3000'
         resource '*',
         headers: :any,
         :expose => ['access-token', 'expiry', 'token-type', 'uid', 'client'],
