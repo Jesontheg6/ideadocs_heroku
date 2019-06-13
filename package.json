@@ -1,25 +1,11 @@
 {
-  "name": "ideadocs-api",
-  "version": "1.0.0",
-  "description": "This README would normally document whatever steps are necessary to get the application up and running.",
-  "main": "index.js",
-  "directories": {
-    "lib": "lib",
-    "test": "test"
+  "name": "react-and-rails",
+  "engines": {
+    "node": "11.2.0"
   },
   "scripts": {
     "build": "cd client && npm install && npm run build && cd ..",
     "deploy": "cp -a client/build/. public/",
     "postinstall": "npm run build && npm run deploy && echo 'Client built!'"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Jesontheg6/Ideadocs-API.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Jesontheg6/Ideadocs-API/issues"
-  },
-  "homepage": "https://github.com/Jesontheg6/Ideadocs-API#readme"
+  }
 }
