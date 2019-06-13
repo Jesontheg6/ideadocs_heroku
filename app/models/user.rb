@@ -4,7 +4,7 @@ devise :database_authenticatable, :registerable,
 		:recoverable, :rememberable, :trackable, :validatable
 	include DeviseTokenAuth::Concerns::User
 
-	has_many :boards
-	has_many :ideas
+	has_many :boards, dependent: :destory
+	has_many :ideas, dependent: :destory
 	
 end
