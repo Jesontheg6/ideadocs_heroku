@@ -20,7 +20,7 @@ class IdeasContainer extends Component {
     super(props)
     this.references = new Map()
     this.selected = this.selected.bind(this)
-    // this.handleReceivedIdeaEvent = this.handleReceivedIdeaEvent.bind(this)
+    this.handleReceivedIdeaEvent = this.handleReceivedIdeaEvent.bind(this)
   }
 
   componentDidMount() {
@@ -29,41 +29,41 @@ class IdeasContainer extends Component {
     .catch(error => console.log(error))
   }
 
-  //  handleReceivedIdeaEvent = ({ event, idea }) => {
-  //   switch(event) {
-  //     case 'created':
-  //       this.setState(prevState => {
-  //         const currentIds = prevState.ideas.map(i => i.id)
-  //         const isIdeaNotRendered = !currentIds.includes(idea.id)
+   handleReceivedIdeaEvent = ({ event, idea }) => {
+    switch(event) {
+      case 'created':
+        this.setState(prevState => {
+          const currentIds = prevState.ideas.map(i => i.id)
+          const isIdeaNotRendered = !currentIds.includes(idea.id)
 
-  //         if (isIdeaNotRendered) {
-  //           const ideas = update(this.state.ideas, {$push: [idea]})
-  //           this.setState({ideas})
-  //         }
-  //       })
-  //       break
-  //     case 'updated':
-  //       this.setState(prevState => {
-  //         const index = prevState.ideas.map(i => i.id).indexOf(idea.id)
-  //         const ideas = update(prevState.ideas, {[index]: {$set: idea}})
-  //         return { ideas }
-  //       })
-  //       break
-  //     case 'deleted':
-  //       this.setState(prevState => {
-  //         const ideas = prevState.ideas.filter((item) => {
-  //           if (item.id !== idea.id) {
-  //             return item
-  //           }
-  //         })
+          if (isIdeaNotRendered) {
+            const ideas = update(this.state.ideas, {$push: [idea]})
+            this.setState({ideas})
+          }
+        })
+        break
+      case 'updated':
+        this.setState(prevState => {
+          const index = prevState.ideas.map(i => i.id).indexOf(idea.id)
+          const ideas = update(prevState.ideas, {[index]: {$set: idea}})
+          return { ideas }
+        })
+        break
+      case 'deleted':
+        this.setState(prevState => {
+          const ideas = prevState.ideas.filter((item) => {
+            if (item.id !== idea.id) {
+              return item
+            }
+          })
 
-  //         return { ideas }
-  //       })
-  //       break
-  //     default:
-  //       console.warn("Unhandled event type")
-  //   }
-  // }
+          return { ideas }
+        })
+        break
+      default:
+        console.warn("Unhandled event type")
+    }
+  }
 
   addNewIdea = () => {
     axios.post(
@@ -158,7 +158,10 @@ class IdeasContainer extends Component {
 
     return (
       <div>
-      
+       <ActionCable
+          channel={{channel: 'IdeasChannel'}}
+          onReceived={this.handleReceivedIdeaEvent}
+        />
 
         <div className="main-div">
           <div className="board-title" onClick={this.handleEditing}>

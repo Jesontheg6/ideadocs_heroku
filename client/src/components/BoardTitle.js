@@ -93,6 +93,10 @@ class BoardTitle extends Component {
   render(){
     return(
       <div className="title">
+           <ActionCable
+          channel={{channel: "BoardsChannel"}}
+          onReceived={this.handleBoardEvents}
+        />
        
         {
           this.state.editMode ?
