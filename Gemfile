@@ -27,7 +27,6 @@ gem 'puma', '~> 3.11'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-gem 'rack-cors'
 gem 'ffaker'
 
 group :development, :test do
@@ -42,12 +41,13 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'foreman', '~> 0.82.0'
+  gem 'solargraph'
 end
 
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-gem 'rack-cors', require: 'rack/cors'
+# gem 'rack-cors', require: 'rack/cors'
 gem 'devise_token_auth'
 gem 'omniauth'
 gem 'redis'
