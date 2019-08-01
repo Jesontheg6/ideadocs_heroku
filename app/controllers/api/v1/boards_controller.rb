@@ -1,18 +1,22 @@
 module Api::V1
   class BoardsController < ApplicationController
 
-	 def index
+    def index
       @board = Board.all
       render json: @board
     end
 
     def create
       @board = Board.create(board_params)
-      render json: @board
+      if @board.save
+        ActionCable.server.broadcast 'boards', event: :created, board: @board
+        head :ok
+        render json: @board
+      end
     end
 
 
-	 def update
+    def update
       @board = Board.find(params[:id])
       @board.update_attributes(board_params)
 
@@ -21,10 +25,10 @@ module Api::V1
       render json: @board
     end
 
-  private
-	def board_params
-		params.require(:board).permit(:boardtitle)
-		end
-	end
+    private
 
+    def board_params
+      params.require(:board).permit(:boardtitle)
+    end
+  end
 end

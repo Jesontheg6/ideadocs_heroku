@@ -11,6 +11,7 @@ module Api::V1
       @idea = Idea.create(idea_params)
 
       ActionCable.server.broadcast(:ideas, event: :created, idea: @idea)
+      head :ok
 
       render json: @idea
     end

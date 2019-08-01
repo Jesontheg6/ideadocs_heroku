@@ -1,6 +1,7 @@
 class IdeasChannel < ApplicationCable::Channel
   def subscribed
-    stream_from :ideas
+    @ideas = Board.ideas
+    stream_for @ideas
   end
 
   def unsubscribed

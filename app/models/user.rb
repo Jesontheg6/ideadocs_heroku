@@ -5,6 +5,5 @@ devise :database_authenticatable, :registerable,
 	include DeviseTokenAuth::Concerns::User
 
 	has_many :boards, dependent: :destroy
-	has_many :ideas, dependent: :destroy
-	
+	has_many :ideas, through: :boards, dependent: :destroy
 end
