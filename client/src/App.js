@@ -7,48 +7,50 @@ import Notification from './components/Notification'
 
 class App extends Component {
   state = {
-    transisitonIn: false,
+    transitionIn: false,
     notification: null
-  }
+  };
 
   setNotification = (notification) => {
     this.setState(
-      { notification, transisitonIn: true },
+      {notification, transitionIn: true},
       this.hideNotificationWithDelay
     )
-  }
+  };
 
   hideNotificationWithDelay = () => {
-    setTimeout(() => this.setState({ transisitonIn: false }), 1000)
-  }
+    setTimeout(() => this.setState({transitionIn: false}), 1000)
+  };
 
   render() {
     return (
       <div className="App">
-        <Navbar expand="lg" variant="light" bg="light">
+        <Navbar
+          expand="lg"
+          variant="light"
+          bg="light"
+        >
           <Container>
-            <Navbar.Brand href="/" className="navbar">IDEADOCS</Navbar.Brand>
-
+            <Navbar.Brand
+              href='/'
+              className="navbar"
+            > IDEADOCS
+            </Navbar.Brand>
             <div className="notification">
               <Notification
-                in={this.state.transisitonIn}
+                in={this.state.transitionIn}
                 notification={this.state.notification}
               />
             </div>
           </Container>
         </Navbar>
 
-        <div className="title-container">
-        </div>
-
-        <BoardTitle onChange={this.setNotification} />
-
-        <div className="App-header">
-        </div>
-
-        <IdeasContainer onChange={this.setNotification} />
+        <div className="title-container"></div>
+        <BoardTitle onChange={this.setNotification}/>
+        <div className="App-header"></div>
+        <IdeasContainer onChange={this.setNotification}/>
       </div>
-    )
+    );
   }
 }
 

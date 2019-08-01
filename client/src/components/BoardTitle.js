@@ -8,12 +8,12 @@ class BoardTitle extends Component {
     title: "",
     editMode: false,
     id: null
-  }
+  };
 
   componentDidMount() {
     axios.get('/api/v1/boards.json')
     .then(response => {
-      const title = response.data[0].boardtitle
+      const title = response.data[0].boardtitle;
 
       this.setState({
         boards: response.data,
@@ -28,13 +28,13 @@ class BoardTitle extends Component {
     this.setState({
       editMode: !this.state.editMode
     })
-  }
+  };
 
   unFocus = (event) => {
     this.setState({
       editMode: false,
       title: event.target.value ? event.target.value : "DEFAULT TITLE"
-    })
+    });
 
     axios
       .put(
@@ -48,14 +48,14 @@ class BoardTitle extends Component {
       .then( res => {
     })
     .catch(error => console.error(error))
-  }
+  };
 
   handleKey = (e) => {
     if (e.key === 'Enter') {
       this.setState({
         title: e.target.value ? e.target.value : "DEFAULT TITLE",
         editMode: false
-      })
+      });
 
       axios
         .put(
@@ -69,17 +69,17 @@ class BoardTitle extends Component {
         .then(res => this.props.onChange("Board renamed"))
         .catch(error => console.error(error))
     }
-  }
+  };
 
   handleBoardEvents = ({event, board}) => {
     switch(event) {
       case 'updated':
-        this.setState({title: board.boardtitle})
-        break
+        this.setState({title: board.boardtitle});
+        break;
       default:
         console.warn("Unhandled event type")
     }
-  }
+  };
 
   render(){
     return(

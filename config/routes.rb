@@ -1,14 +1,14 @@
 Rails.application.routes.draw do
-  # mount ActionCable.server => '/cable'
+  mount ActionCable.server => '/cable'
 
   namespace :api do
     namespace :v1 do
       resources :ideas
-    	resources :boards
+      resources :boards
 
-    	get '*path', to: "application#fallback_index_html", constraints: ->(request) do
-  !request.xhr? && request.format.html?
-end
+      get '*path', to: 'application#fallback_index_html', constraints: ->(request) do
+        !request.xhr? && request.format.html?
+      end
     end
   end
 end
