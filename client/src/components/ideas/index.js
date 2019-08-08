@@ -3,11 +3,14 @@ import axios from 'axios'
 
 
 class Idea extends Component {
-	state = {
-  	title: this.props.idea.title,
-  	body: this.props.idea.body,
-  	color: this.props.idea.color,
-    prevProps:  Object.assign({}, this.props.idea)
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: props.idea.title,
+      body: props.idea.body,
+      color: props.idea.color,
+      prevProps:  Object.assign({}, props.idea)
+    }
   }
 
   changeBackground= (color) => {

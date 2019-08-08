@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import Idea from './Idea'
+import Idea from '.'
 import update from 'immutability-helper'
-import Color from './Color'
+import Color from '../utils/color'
 import { ActionCableConsumer } from 'react-actioncable-provider'
 
 class IdeasContainer extends Component {
@@ -126,7 +126,7 @@ class IdeasContainer extends Component {
     })
 
     return (
-      <div>
+      <div className="App-header">
         <ActionCableConsumer
           channel={{channel: 'IdeasChannel'}}
           onReceived={this.handleReceivedIdeaEvent}

@@ -4,12 +4,10 @@ import './index.css';
 import App from './App';
 import { ActionCableProvider } from 'react-actioncable-provider'
 
-const API_WS_ROOT = `ws://${window.location.hostname}:3001/cable`;
-// const API_WS_ROOT = `wss://${window.location.hostname}/cable`;
+const WS_ROOT = process.env.REACT_APP_API_WS_ROOT;
 ReactDOM.render(
-  <ActionCableProvider url={API_WS_ROOT}>
+  <ActionCableProvider url={WS_ROOT}>
     <App />
   </ActionCableProvider>,
   document.getElementById('root')
 );
- 
