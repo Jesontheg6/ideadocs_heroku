@@ -26,3 +26,6 @@
 
 # Production
 /public
+
+# env files
+.env

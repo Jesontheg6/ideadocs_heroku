@@ -1,6 +1,6 @@
 class UserSerializer < ActiveModel::Serializer
   attributes :email, :username
 
-  has_many :board, serializer: BoardSerializer
-  has_many :idea, serializer: IdeaSerializer
+  has_many :boards, serializer: BoardSerializer
+  has_many :ideas, serializer: IdeaSerializer
 end

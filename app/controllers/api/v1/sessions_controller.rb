@@ -10,7 +10,7 @@ module Api
         if @user.valid_password? params[:password]
           sign_in 'user', @user
           user_serializer = parse_json @user
-          json_res 'signed in user', true, {user: user_serializer}, :ok
+          json_res 'signed in user', true, { user: user_serializer }, :ok
         else
           json_res 'unauthorized', false, {}, :unauthorized
         end
@@ -26,8 +26,7 @@ module Api
       private
 
       def sign_in_params
-        byebug
-        params.require(:user).permit(:email, :password)
+        params.permit(:email, :password)
       end
 
       def load_user

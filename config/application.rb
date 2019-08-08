@@ -20,5 +20,6 @@ module IdeaboardApi
     config.api_only = true
 
     config.action_cable.mount_path = '/cable'
+    config.enable_dependency_loading = true
   end
 end

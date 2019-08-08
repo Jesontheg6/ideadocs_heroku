@@ -2,10 +2,11 @@ module Api::V1
   # user registration i.e sign_in
   class RegistrationsController < Devise::RegistrationsController
     before_action :exists, only: :create
+    respond_to :json
 
     # sign up function
     def create
-      @user = User.build user_params
+      @user = User.new user_params
       if @user.save
         @user_serializer = parse_json @user
         json_res 'signed up user successfully', true, {user: @user_serializer}, :ok
@@ -17,7 +18,7 @@ module Api::V1
     private
 
     def user_params
-    params.require(:user).permit(
+    params.permit(
       :email, :password, :password_confirmation,
       :username, :firstname, :lastname)
     end
@@ -27,6 +28,5 @@ module Api::V1
         json_res "user with email #{params[:email]} exists.", false, {}, :conflict
       end
     end
-
   end
 end
