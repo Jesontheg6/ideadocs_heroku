@@ -10,8 +10,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     origins '*'
     resource '*',
              headers: :any, # when changing this remember to add %(Authorization) for JWT
-             methods: :any,
-             expose: %w(Authorization),
-             max_age: 600
+             expose: ['Authorization'],
+             methods: [:get, :patch, :put, :delete, :post, :options, :show]
   end
 end

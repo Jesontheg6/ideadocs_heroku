@@ -1,5 +1,6 @@
 module Api::V1
   class BoardsController < ApplicationController
+    before_action :authenticate_user!
 
     def index
       @board = Board.all

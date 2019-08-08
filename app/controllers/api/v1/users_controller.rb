@@ -1,7 +1,7 @@
 module Api
   module V1
     class UsersController < ApplicationController
-      before_action :authenticate_with_token!
+      before_action :authenticate_user!
       before_action :set_user, only: [:show, :update, :destroy]
 
       # GET /users

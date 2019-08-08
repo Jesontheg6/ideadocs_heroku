@@ -1,5 +1,6 @@
 module Api::V1
   class IdeasController < ApplicationController
+    before_action :authenticate_user!
 
     def index
       @ideas = Idea.order(created_at: :asc)
@@ -44,4 +45,3 @@ module Api::V1
     end
   end
 end
-
