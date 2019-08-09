@@ -1,95 +1,167 @@
-import React, { Component } from 'react'
-import axios from 'axios'
+import React, { Component } from 'react';
+import { ActionCableConsumer } from 'react-actioncable-provider';
+import update from 'immutability-helper';
 
+import Idea from './idea';
+import Color from '../utils/color';
+import { get, post, del } from '../utils/headers';
 
-class Idea extends Component {
+class IdeasContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: props.idea.title,
-      body: props.idea.body,
-      color: props.idea.color,
-      prevProps:  Object.assign({}, props.idea)
+      ideas: [],
+      selected: null,
+      displayColorPicker: false,
+      url: `/boards/${props.slug}/ideas`,
     }
   }
 
-  changeBackground= (color) => {
-    this.setState(
-      {color},
-      () => { this.updateIdea({ ...this.state, color: color }) }
-    )
+  references = new Map()
+  title = null
 
-  }
-
-  handleInput = (e) => {
-  	this.setState({
-      [e.target.name]: e.target.value
-    })
-  }
-
-  updateIdea = ({ color, body, title, force = false }) => {
-    const prevColor = this.state.prevProps.color
-    const prevTitle = this.state.prevProps.title
-    const prevBody = this.state.prevProps.body
-
-    console.log(`prevColor: ${prevColor} color: ${color}`)
-    if (color !== prevColor || body !== prevBody || title !== prevTitle) {
-      axios.put(
-        `/api/v1/ideas/${this.props.idea.id}`,
-        {
-          idea: {
-            title: title,
-            body: body,
-            color: color
-          }
-        }
-      )
-      .then(response => this.props.updateIdea(response.data))
+  componentDidMount() {
+    get(this.state.url)
+      .then(response => { this.setState({ ideas: response.data.ideas }) })
       .catch(error => console.warn(error))
-    }
-
-    this.props.closeBox()
   }
 
-  handleDelete = () => {this.props.onDelete(this.props.idea.id)}
+  handleReceivedIdeaEvent = ({ event, idea }) => {
+    switch (event) {
+      case 'created':
+        this.setState(prevState => {
+          const currentIds = prevState.ideas.map(i => i.id)
+          const isIdeaNotRendered = !currentIds.includes(idea.id)
 
-  handleClick = () => {this.props.onClick(this.props.idea.id)}
+          if (isIdeaNotRendered) {
+            const ideas = update(this.state.ideas, { $push: [idea] })
+            this.setState({ ideas })
+          }
+        })
+        break
+      case 'updated':
+        this.setState(prevState => {
+          const index = prevState.ideas.map(i => i.id).indexOf(idea.id)
+          const ideas = update(prevState.ideas, { [index]: { $set: idea } })
+          return { ideas }
+        })
+        break
+      case 'deleted':
+        this.setState(prevState => {
+          const ideas = prevState.ideas.filter((item) => item.id !== idea.id)
 
-  render () {
-  	return(
-  		<div
-        className="tile"
-        onClick={this.props.onClick}
-        style={{background: this.state.color}}
-      >
-  		  <span className="deleteButton" onClick={this.handleDelete}> x </span>
-        <form onBlur={() => this.updateIdea(this.state)}>
-    			<input
-            style={{ fontSize: "16px", fontWeight: "bold" }}
-            className='input'
-            type="text"
-            name="title"
-            placeholder='Enter a Title'
-    			  value={this.state.title || ""}
-            onChange={this.handleInput}
-    			  ref={this.props.titleRef}
-            onClick={this.handleColor && this.handleClick}
-            autoComplete="off"
-          />
+          return { ideas }
+        })
+        break
+      default:
+        console.warn("Unhandled event type")
+    }
+  }
 
-    			<textarea
-            style={{fontSize: "14px"}}
-            className='input'
-            name="body"
-            placeholder='Describe your idea'
-    			  value={this.state.body || ""}
-            onChange={this.handleInput}
-            onClick={this.handleClick}
-          ></textarea>
-  		  </form>
-  		</div>
-  	)
+  addNewIdea = () => {
+    post(
+      this.state.url,
+      { title: '', body: '', color: '' }
+    )
+      .then(response => {
+        const currentIds = this.state.ideas.map(i => i.id)
+        const isIdeaNotRendered = !currentIds.includes(response.data.id)
+
+        if (isIdeaNotRendered) {
+          const ideas = update(this.state.ideas, { $push: [response.data] })
+          this.setState(
+            { ideas: ideas },
+            () => this.selected(response.data.id, true)
+          )
+        }
+      })
+      .catch(error => console.error(error))
+  }
+
+  updateIdea = (idea) => {
+    this.props.onChange("All changes saved");
+  }
+
+  deleteIdea = id => {
+    del(this.state.url + '/' + id)
+      .then(response => {
+        const ideaIndex = this.state.ideas.findIndex(x => x.id === id)
+        const ideas = update(this.state.ideas, { $splice: [[ideaIndex, 1]] })
+        this.setState({ ideas: ideas })
+      })
+      .catch(error => console.log(error))
+  }
+
+  // color
+
+  selected(ideaId, enforceFocus = false) {
+    let selectedRef = this.references.get(ideaId)
+    this.setState(
+      {
+        selected: selectedRef,
+        displayColorPicker: true,
+      },
+      () => enforceFocus ? this.title.focus() : null
+
+    )
+  }
+
+  closeBox = () => {
+    setTimeout(() => {
+      this.setState({ displayColorPicker: false })
+    }, 200);
+  }
+
+  render() {
+    const ideas = this.state.ideas.map((idea) => {
+      return (
+        <Idea
+          closeBox={this.closeBox}
+          className="tile"
+          idea={idea}
+          key={`${idea.id}-${idea.updated_at}`}
+          updateIdea={this.updateIdea}
+          titleRef={input => this.title = input}
+          onDelete={this.deleteIdea}
+          onChangeComplete={this.handleChangeComplete}
+          ref={c => this.references.set(idea.id, c)}
+          onClick={() => { this.selected(idea.id) }}
+          boardSlug={this.props.slug}
+        />
+      )
+    })
+
+    return (
+      <div className="App-header">
+        <ActionCableConsumer
+          channel={{ channel: 'IdeasChannel' }}
+          onReceived={this.handleReceivedIdeaEvent}
+        />
+
+        <div className="main-div">
+          <div className="newideabtn-div"></div>
+
+          <div className="color-div">
+            <div onClick={this.handleUnselect} />
+
+            <Color
+              className="color-div"
+              selected={this.state.selected}
+              displayColorPicker={this.state.displayColorPicker}
+            />
+          </div>
+
+          <div className="pretty-div"></div>
+        </div>
+
+        <div>
+          {ideas}
+        </div>
+
+        <button className="newButton newIdeaButton" onClick={() => this.addNewIdea()}>+</button>
+      </div>
+    )
   }
 }
 
-export default Idea
+export default IdeasContainer

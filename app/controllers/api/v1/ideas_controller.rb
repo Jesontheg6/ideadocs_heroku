@@ -9,6 +9,7 @@ module Api::V1
     end
 
     def create
+      idea_params.merge user_id: current_user.id
       @idea = @board.ideas.create! idea_params
       if @idea.save
         ActionCable.server.broadcast :ideas, event: :created, idea: @idea

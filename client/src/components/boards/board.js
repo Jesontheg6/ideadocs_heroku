@@ -1,16 +1,18 @@
-import React, { Component } from 'react'
-import { ActionCableConsumer } from 'react-actioncable-provider'
+import React, { Component } from 'react';
+import { ActionCableConsumer } from 'react-actioncable-provider';
+import { debounce } from 'lodash';
 
 import { put } from '../utils/headers';
+import IdeasContainer from '../ideas/index';
 
 
 class Board extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: this.props.title,
+            title: props.title,
             editMode: false,
-            id: this.props.id
+            id: props.id
         }
     }
 
@@ -19,21 +21,17 @@ class Board extends Component {
             editMode: !this.state.editMode
         })
     };
-    handleEdit = (title) => {
-        this.setState({ title });
-    }
 
-    unFocus = (event) => {
-        event.preventDefault();
+    handleTitleChange = e => {
         this.setState({
-            editMode: false,
-            title: event.target.value,
-        });
-
-        put(`/boards/${this.state.id}`,
-            { title: this.state.title }
-        ).then(res => { this.props.onChange("Board renamed") }).catch(error => console.error(error))
-    };
+            title: e.target.value,
+        })
+        debounce(() => {
+            put(`/boards/${this.state.id}`,
+                { title: this.state.title }
+            ).then(res => { this.props.onChange("Board renamed") }).catch(error => console.error(error))
+        }, 500, { trailing: true })
+    }
 
     handleKey = (e) => {
         if (e.key === 'Enter') {
@@ -61,6 +59,10 @@ class Board extends Component {
     };
 
     render() {
+        const {
+            onChange,
+            id,
+        } = this.props;
         return (
             <div className="title">
                 <ActionCableConsumer
@@ -71,7 +73,8 @@ class Board extends Component {
                     this.state.editMode ?
                         <input
                             defaultValue={this.state.title}
-                            onBlur={this.unFocus}
+                            onChange={this.handleTitleChange}
+                            onBlur={e => console.log(e.target.value)}
                             onKeyDown={this.handleKey}
                             style={{ width: "100%", height: "30px", fontSize: "30px" }}
                             onClick={this.changeTitle}
@@ -81,6 +84,7 @@ class Board extends Component {
                             <h1 className="boardtitle" onClick={this.editTitle}>{this.state.title}</h1>
                         </div>
                 }
+                <IdeasContainer onChange={onChange} slug={id}/>
             </div>
         )
     }

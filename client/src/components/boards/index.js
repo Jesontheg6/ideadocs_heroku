@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Card, Button, Container } from 'react-bootstrap';
+import { Card, Button, Container, Modal, Form } from 'react-bootstrap';
 
-import { get } from '../utils/headers';
+import { get, post } from '../utils/headers';
 import Board from './board';
 
 
@@ -11,9 +11,14 @@ class BoardTitle extends Component {
     slug: '',
     title: '',
     showBoard: false,
+    showModal: false,
   };
 
   componentDidMount() {
+    this.getBoards();
+  };
+
+  getBoards = () => {
     get('/boards')
       .then(response => {
         this.setState({
@@ -21,7 +26,7 @@ class BoardTitle extends Component {
         })
       })
       .catch(error => console.error(error))
-  };
+  }
 
   showIdeas = (slug, title) => {
     this.setState({
@@ -29,6 +34,22 @@ class BoardTitle extends Component {
       slug,
       title,
     });
+  }
+
+  handleClose = () => {
+    this.setState({ showModal: false });
+  }
+
+  handleShowAdd = () => {
+    this.setState({ showModal: true });
+  }
+
+  handleSave = e => {
+    e.preventDefault();
+    post('/boards', { title: e.target.newBoard.value })
+      .then(res => { this.props.onChange('Added board!'); this.getBoards(); })
+      .catch(error => { console.log(error) });
+    this.handleClose();
   }
 
   renderBoards = () => {
@@ -50,6 +71,7 @@ class BoardTitle extends Component {
       slug,
       title,
       showBoard,
+      showModal,
     } = this.state;
     const { onChange } = this.props;
     return (
@@ -59,6 +81,25 @@ class BoardTitle extends Component {
           :
           this.renderBoards()
         }
+        {!showBoard && <button className="newButton board-card" onClick={this.handleShowAdd} >+</button>}
+        <Modal show={showModal} onHide={this.handleClose}>
+          <Form onSubmit={this.handleSave}>
+            <Modal.Header closeButton>
+              <Modal.Title>Add Board</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form.Control type="text" name="newBoard" placeholder="Enter new board title" required />
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="outline-secondary" onClick={this.handleClose}>
+                Close
+            </Button>
+              <Button variant="outline-primary" type="submit" >
+                Save Board
+            </Button>
+            </Modal.Footer>
+          </Form>
+        </Modal>
       </Container>
     )
   }

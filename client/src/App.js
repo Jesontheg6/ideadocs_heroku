@@ -4,8 +4,7 @@ import { Container } from 'react-bootstrap';
 import axios from 'axios';
 import './App.css'
 
-import IdeasContainer from './components/ideas/idea_container'
-import BoardTitle from './components/boards'
+import BoardTitle from './components/boards';
 import NavBar from './components/base/navbar';
 import Login from './components/user/login';
 
@@ -64,9 +63,8 @@ class App extends Component {
                   setNotification={this.setNotification}
                   {...props} />}
               />
+              <Route exact path="/" render={(props) => <BoardTitle onChange={this.setNotification} {...props} />} />
               <Route exact path="/boards" render={(props) => <BoardTitle onChange={this.setNotification} {...props} />} />
-              <Route exact path="/board/:id/ideas" render={(props) => <IdeasContainer onChange={this.setNotification} {...props} />} />
-              <Route exact path="/idea/:id" render={(props) => <Login {...props} />} />
             </Switch>
           </Container>
         </Router>

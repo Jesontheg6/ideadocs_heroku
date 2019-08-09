@@ -17,10 +17,11 @@ font-weight: bold;
 
 .boards {
 	display: flex;
+	flex-wrap: wrap;
 }
 
 .board-card {
-	width: '18rem';
+	flex-basis: 21%;
 	text-align: center;
 	margin: 20px;
 }
@@ -52,18 +53,21 @@ font-weight: bold;
   	display: inline-block;
 }
 
-.newIdeaButton {
+.newButton {
 	background: #f2f2f2; opacity:0.6;;
 	color: black;
 	border: none;
 	border-radius: 60px;
 	font-size: 80px;
 	cursor: pointer;
-	height: 250px;
-  	width: 250px;
-
-
+	height: 200px;
 }
+
+.newIdeaButton {
+	height: 250px;
+	width: 250px;
+}
+
 .pretty-div {
 	height: 90px;
   	padding: 20px;

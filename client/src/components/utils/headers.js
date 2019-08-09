@@ -18,3 +18,7 @@ export const post = (url, data) => (
 export const put = (url, data) => (
     axios.put('/api/v1' + url, data, getHeader())
 );
+
+export const del = url => (
+    axios.delete('/api/v1' + url, getHeader())
+);
