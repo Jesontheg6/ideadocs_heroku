@@ -9,13 +9,17 @@ class Login extends Component {
         redirect: false,
     };
 
+    componentWillUnmount() {
+        this.props.setNotification('Logged in user successfully');
+    }
+
     handleLogin = e => {
         e.preventDefault();
         axios.post('/login', {
             email: e.target.email.value,
             password: e.target.password.value,
         }).then(response => {
-            sessionStorage.setItem('token', response.headers.authorization);
+            sessionStorage.setItem('token', JSON.stringify(response.headers.authorization));
             console.log(response.data);
             this.props.disableLogin();
             this.setState({ redirect: true });
@@ -27,7 +31,6 @@ class Login extends Component {
     render() {
         const { redirect } = this.state;
         if (redirect) {
-            this.props.setNotification('Logged in user successfully');
             return <Redirect to='/boards' />
         }
         return <Container>

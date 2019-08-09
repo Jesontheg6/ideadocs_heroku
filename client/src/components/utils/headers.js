@@ -8,13 +8,13 @@ const getFromStorage = key => {
 const getHeader = () => ({ headers: { 'Authorization': `${getFromStorage('token')}` } });
 
 export const get = url => (
-    axios.get(url, getHeader)
+    axios.get('/api/v1' + url, getHeader())
 );
 
 export const post = (url, data) => (
-    axios.post(url, data, getHeader)
+    axios.post('/api/v1' + url, data, getHeader())
 );
 
 export const put = (url, data) => (
-    axios.post(url, data, getHeader)
+    axios.put('/api/v1' + url, data, getHeader())
 );

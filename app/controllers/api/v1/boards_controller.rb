@@ -3,33 +3,37 @@ module Api::V1
     before_action :authenticate_user!
 
     def index
-      @board = Board.all
-      render json: @board
+      @boards = current_user.boards
+      json_res 'Success', true, { boards: parse_json(@boards) }, :ok
     end
 
     def create
-      @board = Board.create(board_params)
+      @board = current_user.boards.create! board_params
+      @board.slug = params[:title].downcase.gsub! ' ', '-'
       if @board.save
         ActionCable.server.broadcast 'boards', event: :created, board: @board
-        head :ok
-        render json: @board
+        json_res 'created', true, { board: parse_json(@board) }, :created
+      else
+        json_res 'error', false, { error: @board.errors }, :bad_request
       end
     end
 
-
     def update
-      @board = Board.find(params[:id])
-      @board.update_attributes(board_params)
-
-      ActionCable.server.broadcast 'boards', event: :updated, board: @board
-
-      render json: @board
+      @board = Board.find_by title: params[:slug].gsub!('-', ' ')
+      if @board
+        @board.update_attributes board_params
+        @board.slug = params[:title].downcase.gsub! ' ', '-'
+        ActionCable.server.broadcast 'boards', event: :updated, board: @board
+        json_res 'updated', true, { board: parse_json(@board) }, :ok
+      else
+        json_res 'error', false, { error: 'board not found' }, :not_found
+      end
     end
 
     private
 
     def board_params
-      params.require(:board).permit(:boardtitle)
+      params.permit(:title, :slug)
     end
   end
 end

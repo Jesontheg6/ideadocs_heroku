@@ -18,7 +18,7 @@ Rails.application.routes.draw do
         put 'user/:username', to: 'users#update'
       end
       resources :ideas
-      resources :boards
+      resources :boards, param: :slug
     end
   end
   get '*path', to: 'application#fallback_index_html', constraints: ->(request) do
