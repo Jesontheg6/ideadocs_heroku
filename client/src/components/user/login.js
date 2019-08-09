@@ -33,7 +33,7 @@ class Login extends Component {
         if (redirect) {
             return <Redirect to='/boards' />
         }
-        return <Container>
+        return <Container style={{ width: '50%' }}>
             <Form onSubmit={this.handleLogin}>
                 <Form.Group controlId="email">
                     <Form.Label>Email address</Form.Label>

@@ -26,4 +26,4 @@ ideas = Idea.create(
 	)
 end
 
-Board.create!(boardtitle: 'Explore board')
+Board.create! title: 'Explore board'

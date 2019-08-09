@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { Card, Button, Container } from 'react-bootstrap';
 
 import { get } from '../utils/headers';
 import Board from './board';
@@ -6,7 +7,10 @@ import Board from './board';
 
 class BoardTitle extends Component {
   state = {
-    boards: []
+    boards: [],
+    slug: '',
+    title: '',
+    showBoard: false,
   };
 
   componentDidMount() {
@@ -19,19 +23,43 @@ class BoardTitle extends Component {
       .catch(error => console.error(error))
   };
 
-  renderBoards = () => {
-    return this.state.boards.map(board => {
-      return <Board id={board.slug} key={board.slug} title={board.title} onChange={this.props.onChange} />
-    })
+  showIdeas = (slug, title) => {
+    this.setState({
+      showBoard: true,
+      slug,
+      title,
+    });
   }
 
+  renderBoards = () => {
+    return this.state.boards.map(board => {
+      return <Card className="board-card" key={board.slug}>
+        <Card.Body>
+          <Card.Title>{board.title.toUpperCase()}</Card.Title>
+          <Card.Text>
+            Probably include board description to go here
+          </Card.Text>
+          <Button variant="outline-dark" onClick={() => this.showIdeas(board.slug, board.title)}>View Board</Button>
+        </Card.Body>
+      </Card>
+    })
+  };
+
   render() {
+    const {
+      slug,
+      title,
+      showBoard,
+    } = this.state;
+    const { onChange } = this.props;
     return (
-      <div className="title-container">
-        <div className="title">
-          {this.renderBoards()}
-        </div>
-      </div>
+      <Container className="boards">
+        {showBoard ?
+          <Board id={slug} title={title} onChange={onChange} />
+          :
+          this.renderBoards()
+        }
+      </Container>
     )
   }
 };

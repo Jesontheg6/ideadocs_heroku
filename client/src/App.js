@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
 import axios from 'axios';
 import './App.css'
 
@@ -54,18 +55,20 @@ class App extends Component {
             notification={notification}
             disabled={disabled}
             handleLogout={this.handleLogout}
-            />
-          <Switch>
-            <Route exact path="/login" render={(props) =>
-              <Login
-                disableLogin={this.disableLogin}
-                setNotification={this.setNotification}
-                {...props} />}
-                />
-            <Route exact path="/boards" render={(props) => <BoardTitle onChange={this.setNotification} {...props}/>} />
-            <Route exact path="/board/:id/ideas" render={(props) => <IdeasContainer onChange={this.setNotification} {...props}/>} />
-            <Route exact path="/idea/:id" render={(props) => <Login {...props}/>} />
-          </Switch>
+          />
+          <Container>
+            <Switch>
+              <Route exact path="/login" render={(props) =>
+                <Login
+                  disableLogin={this.disableLogin}
+                  setNotification={this.setNotification}
+                  {...props} />}
+              />
+              <Route exact path="/boards" render={(props) => <BoardTitle onChange={this.setNotification} {...props} />} />
+              <Route exact path="/board/:id/ideas" render={(props) => <IdeasContainer onChange={this.setNotification} {...props} />} />
+              <Route exact path="/idea/:id" render={(props) => <Login {...props} />} />
+            </Switch>
+          </Container>
         </Router>
       </div>
     );

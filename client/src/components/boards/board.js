@@ -62,27 +62,25 @@ class Board extends Component {
 
     render() {
         return (
-            <div className="title-container">
-                <div className="title">
-                    <ActionCableConsumer
-                        channel={{ channel: "BoardsChannel" }}
-                        onReceived={this.handleBoardEvents}
-                    />
-                    {
-                        this.state.editMode ?
-                            <input
-                                defaultValue={this.state.title}
-                                onBlur={this.unFocus}
-                                onKeyDown={this.handleKey}
-                                style={{ width: "100%", height: "30px", fontSize: "30px" }}
-                                onClick={this.changeTitle}
-                            />
-                            :
-                            <div className="titlediv" align="center">
-                                <h1 className="boardtitle" onClick={this.editTitle}>{this.state.title}</h1>
-                            </div>
-                    }
-                </div>
+            <div className="title">
+                <ActionCableConsumer
+                    channel={{ channel: "BoardsChannel" }}
+                    onReceived={this.handleBoardEvents}
+                />
+                {
+                    this.state.editMode ?
+                        <input
+                            defaultValue={this.state.title}
+                            onBlur={this.unFocus}
+                            onKeyDown={this.handleKey}
+                            style={{ width: "100%", height: "30px", fontSize: "30px" }}
+                            onClick={this.changeTitle}
+                        />
+                        :
+                        <div className="titlediv" align="center">
+                            <h1 className="boardtitle" onClick={this.editTitle}>{this.state.title}</h1>
+                        </div>
+                }
             </div>
         )
     }

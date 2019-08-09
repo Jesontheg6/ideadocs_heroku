@@ -4,7 +4,7 @@ module Api::V1
 
     def index
       @boards = current_user.boards
-      json_res 'Success', true, { boards: parse_json(@boards) }, :ok
+      json_res 'success', true, { boards: parse_json(@boards) }, :ok
     end
 
     def create

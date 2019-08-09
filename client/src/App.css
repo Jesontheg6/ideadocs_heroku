@@ -15,15 +15,20 @@ font-weight: bold;
   height: 12px;
 }
 
-.title-container {
-	height: 70px;
-  	padding: 20px;
+.boards {
+	display: flex;
+}
+
+.board-card {
+	width: '18rem';
+	text-align: center;
+	margin: 20px;
 }
 
 .title {
-	text-align: center;
-
+	width: 100%;
 }
+
 .tile {
   height: 250px;
   width: 250px;
@@ -131,5 +136,3 @@ textarea {
 	float: right;
 	position: absolute;
 }
-
-
