@@ -8,7 +8,6 @@ const authenticate = Component => props => {
     const firebase = useContext(FirebaseContext);
     firebase.auth.onAuthStateChanged(
         user => {
-            console.log(user);
             user
                 ? setAuthUser(user)
                 : setAuthUser(null);

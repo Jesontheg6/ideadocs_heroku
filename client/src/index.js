@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import "../node_modules/toastr/build/toastr.min.css";
 import App from './App';
 import { ActionCableProvider } from 'react-actioncable-provider'
 import Firebase, { FirebaseContext } from './utils/firebase';

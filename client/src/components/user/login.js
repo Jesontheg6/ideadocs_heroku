@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 // import axios from 'axios';
 import { Button, Container, Form } from 'react-bootstrap';
+import toast from '../../constants/toast';
 
 import { FirebaseContext } from '../../utils/firebase';
 import { SignUpLink } from './signup';
@@ -25,8 +26,10 @@ const Login = ({ setNotification, history }) => {
             .doSignInWithEmailAndPassword(e.target.email.value, e.target.password.value)
             .then(() => {
                 history.push('/');
+                toast('success', 'logged in')
             })
             .catch(error => {
+                toast('error', error.message);
                 console.log(error.code, error.message);
             });
     }

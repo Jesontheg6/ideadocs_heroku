@@ -4,6 +4,7 @@ import { FirebaseContext } from '../../utils/firebase';
 import { Link } from 'react-router-dom';
 
 import * as ROUTES from '../../constants/routes';
+import toast from '../../constants/toast';
 
 const SignUp = () => {
     const firebase = useContext(FirebaseContext);
@@ -24,12 +25,12 @@ const SignUp = () => {
         firebase
             .doCreateUserWithEmailAndPassword(email, password)
             .then(authUser => {
-                console.log(authUser);
                 this.props.history.push('/');
             }).catch(error => handleErrors(error))
     };
 
     const handleErrors = error => {
+        toast('error', error.message)
         console.log(error.code, error.message);
     };
 
