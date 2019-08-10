@@ -39,7 +39,8 @@ const Idea = React.forwardRef((props, ref) => {
         }
       )
         .then(response => { })
-        .catch(error => toast('error', error.data.error));
+        .catch(error => console.log(error))
+        // .catch(error => { toast('error', error.data.error || error) });
     }
     props.closeBox();
   }

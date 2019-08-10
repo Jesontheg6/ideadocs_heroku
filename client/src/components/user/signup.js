@@ -7,7 +7,7 @@ import axios from 'axios';
 import * as ROUTES from '../../constants/routes';
 import toast from '../../constants/toast';
 
-const SignUp = () => {
+const SignUp = ({history}) => {
     const firebase = useContext(FirebaseContext);
     const [validated, setValidated] = useState(false);
     const [confirmError, setConfirmError] = useState('');
@@ -43,13 +43,13 @@ const SignUp = () => {
                     // we log users out after sign up so that we can
                     // get token from backend when they log in.
                     firebase.doSignOut();
-                    this.props.history.push(ROUTES.SIGN_IN);
-                }).catch(err => handleErrors(err.data));
+                    history.push(ROUTES.SIGN_IN);
+                }).catch(err => handleErrors(err));
             }).catch(error => handleErrors(error))
     };
 
     const handleErrors = error => {
-        toast('error', error.message)
+        toast('error', error)
         console.log(error.code, error.message);
     };
 
