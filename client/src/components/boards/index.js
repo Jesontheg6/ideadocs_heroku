@@ -21,7 +21,7 @@ const BoardTitle = () => {
 
   const getBoards = () => {
     get('/boards')
-      .then(response => { setBoards(response.data.boards); toast('success', response.data.message); })
+      .then(response => setBoards(response.data.boards))
       .catch(error => toast('error', error));
   }
 

@@ -17,13 +17,11 @@ const Board = ({ slug, title }) => {
     };
 
     const handleTitleChange = e => {
-        e.preventDefault();
         setTitle(e.target.value);
         debounce(() => { renameTitile() }, 500, { trailing: true })
     }
 
     const handleKey = (e) => {
-        e.preventDefault();
         if (e.key === 'Enter') {
             setTitle(e.target.value);
             setEditMode(false);
@@ -54,7 +52,7 @@ const Board = ({ slug, title }) => {
                     onBlur={() => setEditMode(false)}
                     onKeyDown={handleKey}
                     style={{ width: "100%", height: "30px", fontSize: "30px" }}
-                    // onClick={changeTitle}
+                    onClick={() => setEditMode(true)}
                 />
      :
                 <div className="titlediv" align="center">

@@ -1,36 +1,37 @@
 import React, { useContext } from 'react';
-// import axios from 'axios';
+import axios from 'axios';
 import { Button, Container, Form } from 'react-bootstrap';
 import toast from '../../constants/toast';
 
 import { FirebaseContext } from '../../utils/firebase';
 import { SignUpLink } from './signup';
+import * as ROUTES from '../../constants/routes';
 
-const Login = ({ setNotification, history }) => {
+const Login = ({ history }) => {
     const firebase = useContext(FirebaseContext);
 
     const handleLogin = e => {
         e.preventDefault();
-        // axios.post('/login', {
-        //     email: e.target.email.value,
-        //     password: e.target.password.value,
-        // }).then(response => {
-        //     sessionStorage.setItem('token', JSON.stringify(response.headers.authorization));
-        //     console.log(response.data);
-        //     this.props.disableLogin();
-        //     this.setState({ redirect: true });
-        // }).catch(error => {
-        //     console.log(error)
-        // })
+        const email = e.target.email.value;
+        const password = e.target.password.value;
         firebase
-            .doSignInWithEmailAndPassword(e.target.email.value, e.target.password.value)
+            .doSignInWithEmailAndPassword(email,password)
             .then(() => {
-                history.push('/');
-                toast('success', 'logged in')
+                // log in user to backend to get token
+                axios.post('/login', {
+                    email,
+                    password,
+                }).then(response => {
+                    sessionStorage.setItem('token', JSON.stringify(response.headers.authorization));
+                    console.log(response.data);
+                    toast('success', `you are logged in ${response.data.user.username}`);
+                    history.push(ROUTES.LANDING);
+                }).catch(error => {
+                    toast('error', error.data.message);
+                })
             })
             .catch(error => {
                 toast('error', error.message);
-                console.log(error.code, error.message);
             });
     }
     return <Container style={{ width: '50%' }}>

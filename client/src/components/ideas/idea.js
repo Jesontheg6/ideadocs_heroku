@@ -3,21 +3,20 @@ import React, { useState } from 'react';
 import { put } from '../utils/headers';
 import toast from '../../constants/toast';
 
-const Idea = (props) => {
+const Idea = React.forwardRef((props, ref) => {
   const [title, setTitle] = useState(props.idea.title);
   const [body, setBody] = useState(props.idea.body);
-  // const [color, setColor] = useState('');
-  const color = props.idea.color
+  const [color, setColor] = useState('');
+  // const color = props.idea.color || '';
 
   const prevProps = Object.assign({}, props.idea);
 
-  // const changeBackground = color => {
-  //   setColor(color);
-  //   updateIdea(color);
-  // }
+  const changeBackground = color => {
+    setColor(color);
+    updateIdea(color);
+  }
 
   const handleInput = e => {
-    e.preventDefault();
     switch (e.target.name) {
       case 'title':
         setTitle(e.target.value);
@@ -30,7 +29,7 @@ const Idea = (props) => {
     }
   }
 
-  const updateIdea = (color, force=false) => {
+  const updateIdea = (color, force = false) => {
     if (color !== prevProps.color || body !== prevProps.body || title !== prevProps.title || force) {
       put(`/boards/${props.boardSlug}/ideas/${props.idea.id}`,
         {
@@ -39,20 +38,21 @@ const Idea = (props) => {
           color,
         }
       )
-        .then(response => toast('success', 'updated idea'))
-        .catch(error => toast('warn', error));
+        .then(response => { })
+        .catch(error => toast('error', error.data.error));
     }
     props.closeBox();
   }
 
   const handleDelete = () => props.onDelete(props.idea.id);
 
-  const handleClick = () => props.onClick(props.idea.id);
+  const handleClick = () => props.onClick();
 
   return (
     <div
       className="tile"
       onClick={handleClick}
+      ref={ref}
       style={{ background: color }} >
       <span className="deleteButton" onClick={handleDelete}>x</span>
       <form onBlur={updateIdea(color)}>
@@ -64,7 +64,6 @@ const Idea = (props) => {
           placeholder='Enter a Title'
           value={title || ""}
           onChange={handleInput}
-          ref={props.titleRef}
           onClick={handleClick}
           autoComplete="off"
         />
@@ -81,6 +80,6 @@ const Idea = (props) => {
       </form>
     </div>
   )
-};
+});
 
 export default Idea;

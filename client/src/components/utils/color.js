@@ -1,27 +1,21 @@
 import React from 'react'
 import { TwitterPicker } from 'react-color'
 
-class Color extends React.Component {
-  state = {
-    color: ""
+const Color = (props) => {
+  const handleChangeComplete = (color) => {
+    props.selected.changeBackground(color.hex);
   };
 
-  handleChangeComplete = (color) => {
-    this.props.selected.changeBackground(color.hex);
-  };
-
- render() {
-    return (
-      <div hidden={ !this.props.selected }>
-        <div style={{ display: (this.props.displayColorPicker ? 'block' : 'none') }}>
-          <TwitterPicker
-            className= "colorpicker"
-            onChangeComplete={ this.handleChangeComplete }
-          />
-        </div>
+  return (
+    <div hidden={!props.selected}>
+      <div style={{ display: (props.displayColorPicker ? 'block' : 'none') }}>
+        <TwitterPicker
+          className="colorpicker"
+          onChangeComplete={handleChangeComplete}
+        />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-export default Color
+export default Color;

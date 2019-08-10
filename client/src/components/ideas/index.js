@@ -12,8 +12,7 @@ const IdeasContainer = ({ slug }) => {
   const [selected, setSelected] = useState('');
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const url = `/boards/${slug}/ideas`;
-
-  let references = new Map()
+  const ideaRef = React.createRef();
   let title = null
 
   useEffect(() => {
@@ -67,9 +66,8 @@ const IdeasContainer = ({ slug }) => {
   }
 
   // color
-  const selectIdea = (ideaId, enforceFocus = false) => {
-    let selectedRef = references.get(ideaId);
-    setSelected(selectedRef);
+  const selectIdea = (enforceFocus = false) => {
+    setSelected(ideaRef);
     setDisplayColorPicker(true);
     if (enforceFocus) title.focus();
   }
@@ -77,25 +75,27 @@ const IdeasContainer = ({ slug }) => {
   const closeBox = () => {
     setTimeout(() => {
       setDisplayColorPicker(false);
-    }, 200);
+    }, 1000);
   }
 
-  const renderIdeas = ideas.map((idea) => {
-    return (
-      <Idea
-        closeBox={closeBox}
-        className="tile"
-        idea={idea}
-        key={`${idea.id}-${idea.updated_at}`}
-        titleRef={input => title = input}
-        onDelete={deleteIdea}
-        // onChangeComplete={handleChangeComplete}
-        ref={c => references.set(idea.id, c)}
-        onClick={selectIdea}
-        boardSlug={slug}
-      />
-    )
-  });
+  const renderIdeas = () => {
+    return ideas.map((idea) => {
+      return (
+        <Idea
+          closeBox={closeBox}
+          className="tile"
+          idea={idea}
+          key={`${idea.id}-${idea.updated_at}`}
+          titleRef={input => title = input}
+          onDelete={deleteIdea}
+          // onChangeComplete={handleChangeComplete}
+          ref={ideaRef}
+          onClick={selectIdea}
+          boardSlug={slug}
+        />
+      )
+    })
+  };
 
   return (
     <div className="App-header">
@@ -109,7 +109,7 @@ const IdeasContainer = ({ slug }) => {
           {/* <div onClick={handleUnselect} /> */}
           <Color
             className="color-div"
-            selected={selected}
+            selected={selectIdea}
             displayColorPicker={displayColorPicker} />
         </div>
         <div className="pretty-div"></div>

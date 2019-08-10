@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Container, Button, Form, Col, InputGroup } from 'react-bootstrap';
 import { FirebaseContext } from '../../utils/firebase';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 import * as ROUTES from '../../constants/routes';
 import toast from '../../constants/toast';
@@ -20,12 +21,30 @@ const SignUp = () => {
         }
         const email = form.elements.email.value;
         const password = form.elements.password.value;
-        setValidated(true);
+        const username = form.elements.username.value;
+        const firstname = form.elements.firstname.value;
+        const lastname = form.elements.lastname.value;
+        const password_confirmation = form.elements.confirmation.value;
 
+        setValidated(true);
         firebase
             .doCreateUserWithEmailAndPassword(email, password)
             .then(authUser => {
-                this.props.history.push('/');
+                // create our user as well as on the backend
+                axios.post('/signup', {
+                    email,
+                    password,
+                    password_confirmation,
+                    firstname,
+                    lastname,
+                    username
+                }).then(res => {
+                    toast('success', res.data.message);
+                    // we log users out after sign up so that we can
+                    // get token from backend when they log in.
+                    firebase.doSignOut();
+                    this.props.history.push(ROUTES.SIGN_IN);
+                }).catch(err => handleErrors(err.data));
             }).catch(error => handleErrors(error))
     };
 
@@ -35,7 +54,6 @@ const SignUp = () => {
     };
 
     const handleConfirmChange = e => {
-        e.preventDefault();
         if (pass.current.value !== e.target.value) {
             setConfirmError("Passwords don't match");
         } else {
@@ -46,7 +64,7 @@ const SignUp = () => {
     return <Container style={{ width: '60%' }}>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Form.Row>
-                <Form.Group as={Col} md="4" controlId="firstName">
+                <Form.Group as={Col} md="4" controlId="firstname">
                     <Form.Label>First Name</Form.Label>
                     <Form.Control
                         required
@@ -58,7 +76,7 @@ const SignUp = () => {
                         Please enter a name.
                     </Form.Control.Feedback>
                 </Form.Group>
-                <Form.Group as={Col} md="4" controlId="lastName">
+                <Form.Group as={Col} md="4" controlId="lastname">
                     <Form.Label>Last name</Form.Label>
                     <Form.Control
                         required
