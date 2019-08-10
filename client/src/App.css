@@ -5,11 +5,13 @@
 }
 
 
-.navbar {
+.navbar-brand {
 font-size: 30px;
 font-weight: bold;
-
 }
+/* .nav-link {
+	margin-top: 15px;
+} */
 
 .App-header {
   height: 12px;

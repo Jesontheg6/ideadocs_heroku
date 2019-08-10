@@ -1,31 +1,14 @@
-import React, { Component } from 'react';
-import { Navbar, Container, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Navbar } from 'react-bootstrap';
 
-import Notification from "./notification";
+import Navigation from '../navigation';
 
-class NavBar extends Component {
-    render() {
-        const {
-            transition,
-            notification,
-            disabled,
-            handleLogout,
-        } = this.props;
-
-        return <Navbar expand="lg" variant="light" bg="light">
-            <Container>
-                <Navbar.Brand href='/' className="navbar"> IDEADOCS </Navbar.Brand>
-                <div className="notification">
-                    <Notification in={transition} notification={notification} />
-                </div>
-                {disabled ?
-                    <Button variant="outline-dark" onClick={handleLogout}>Logout</Button>
-                    :
-                    <Link to="/login">Log In</Link>}
-            </Container>
-        </Navbar>
-    }
+const NavBar = () => {
+    return <Navbar expand="lg" variant="light" bg="light">
+        <Navbar.Toggle aria-controls="nav" />
+        <Navbar.Brand href='/' className="navbar-brand"> IDEADOCS </Navbar.Brand>
+        <Navigation />
+    </Navbar>
 };
 
-export default NavBar
+export default NavBar;

@@ -5,9 +5,10 @@
   "proxy": "http://localhost:3001",
   "dependencies": {
     "actioncable": "^5.2.2-1",
+    "add": "^2.0.6",
     "axios": "^0.19.0",
     "bootstrap": "^4.3.1",
-    "firebase": "^6.0.2",
+    "firebase": "^6.3.5",
     "helper": "^0.0.13",
     "immutability": "^1.0.2",
     "immutability-helper": "^3.0.0",
@@ -20,7 +21,9 @@
     "react-router-dom": "5.0.0",
     "react-scripts": "3.0.1",
     "react-transition-group": "^2.6.1",
-    "semantic-ui-react": "^0.87.1"
+    "semantic-ui-react": "^0.87.1",
+    "toastr": "^2.1.4",
+    "yarn": "^1.17.3"
   },
   "scripts": {
     "start": "react-scripts start",
