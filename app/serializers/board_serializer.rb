@@ -1,5 +1,5 @@
 class BoardSerializer < ActiveModel::Serializer
-  attributes :title, :slug
+  attributes :id, :title, :slug
 
   belongs_to :user, serializer: UserSerializer
   has_many :ideas, serializer: IdeaSerializer

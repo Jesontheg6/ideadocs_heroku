@@ -10,6 +10,7 @@ import { authorize } from '../../utils/session';
 const BoardTitle = () => {
 
   const [slug, setSlug] = useState('');
+  const [bId, setId] = useState('');
   const [boards, setBoards] = useState([]);
   const [title, setTitle] = useState('');
   const [showBoard, setShowBoard] = useState(false);
@@ -25,10 +26,11 @@ const BoardTitle = () => {
       .catch(error => toast('error', error));
   }
 
-  const showIdeas = (slug, title) => {
+  const showIdeas = (slug, title, id) => {
     setShowBoard(true);
     setSlug(slug);
     setTitle(title);
+    setId(id);
   }
 
   const handleClose = () => {
@@ -41,8 +43,9 @@ const BoardTitle = () => {
 
   const handleSave = e => {
     e.preventDefault();
-    post('/boards', { title: e.target.newBoard.value })
-      .then(res => { toast('success', e.target.newBoard.value + ' board added'); getBoards(); })
+    const title = e.target.newBoard.value;
+    post('/boards', { title })
+      .then(res => { toast('success', title + ' board added'); getBoards(); })
       .catch(error => { toast('error', error) });
     handleClose();
   }
@@ -55,7 +58,7 @@ const BoardTitle = () => {
           <Card.Text>
             Probably include board description to go here
           </Card.Text>
-          <Button variant="outline-dark" onClick={() => showIdeas(board.slug, board.title)}>View Board</Button>
+          <Button variant="outline-dark" onClick={() => showIdeas(board.slug, board.title, board.id)}>View Board</Button>
         </Card.Body>
       </Card>
     })
@@ -63,7 +66,7 @@ const BoardTitle = () => {
   return (
     <Container className="boards">
       {showBoard ?
-        <Board slug={slug} title={title} />
+        <Board slug={slug} title={title} id={bId} />
         :
         renderBoards()
       }

@@ -23,10 +23,11 @@ const IdeasContainer = ({ slug }) => {
   const addNewIdea = () => {
     post(url, { title: '', body: '', color: '' })
       .then(response => {
+        toast('success', 'item added')
         const currentIds = ideas.map(i => i.id)
         const isIdeaNotRendered = !currentIds.includes(response.data.idea.id)
         if (isIdeaNotRendered) {
-          setIdeas(update(ideas, { $push: [response.data] }));
+          setIdeas(update(ideas, { $push: [response.data.idea] }));
           selectIdea(response.data.id, true);
         }
       })
@@ -38,6 +39,7 @@ const IdeasContainer = ({ slug }) => {
       .then(response => {
         const ideaIndex = ideas.findIndex(x => x.id === id)
         setIdeas(update(ideas, { $splice: [[ideaIndex, 1]] }));
+        toast('success', 'item deleted')
       })
       .catch(error => toast('error', error));
   }

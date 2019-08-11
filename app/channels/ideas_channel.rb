@@ -4,6 +4,10 @@ class IdeasChannel < ApplicationCable::Channel
     stream_for @idea
   end
 
+  def received(data)
+    IdeasChannel.broadcast_to(@idea, idea: @idea)
+  end
+
   def unsubscribed
     stop_all_streams
   end

@@ -22,31 +22,34 @@ const Idea = React.forwardRef((props, ref) => {
     switch (e.target.name) {
       case 'title':
         setTitle(e.target.value);
+        updateApi();
         break;
       case 'body':
         setBody(e.target.value);
+        updateApi();
         break;
       default:
         break;
     }
   }
+  const updateApi = debounce(() => {
+    put(`/boards/${props.boardSlug}/ideas/${props.idea.id}`,
+      {
+        title,
+        body,
+        color,
+      }
+    )
+      .then(response => { toast('success', 'updated item') })
+      .catch(error => { toast('error', error) });
+  }, 1000, { trailing: true });
 
-  const updateIdea = (force = false) => {
-    if (color !== prevProps.color || body !== prevProps.body || title !== prevProps.title || force) {
-      debounce(() => {
-        put(`/boards/${props.boardSlug}/ideas/${props.idea.id}`,
-          {
-            title,
-            body,
-            color,
-          }
-        )
-          .then(response => { toast('success', 'updated item') })
-          .catch(error => { toast('error', error) });
-      }, 1000, { trailing: true });
-    }
-    props.closeBox();
-  }
+  // const updateIdea = (force = false) => {
+  //   if (color !== prevProps.color || body !== prevProps.body || title !== prevProps.title || force) {
+  //     updateApi();
+  //   }
+  //   props.closeBox();
+  // }
 
   const handleDelete = () => props.onDelete(props.idea.id);
 
@@ -71,7 +74,7 @@ const Idea = React.forwardRef((props, ref) => {
         channel={{ channel: 'IdeasChannel', id: props.idea.id }}
         onReceived={handleReceivedIdeaEvent} />
       <span className="deleteButton" onClick={handleDelete}>x</span>
-      <form onBlur={updateIdea(color)}>
+      <form>
         <input
           style={{ fontSize: "16px", fontWeight: "bold" }}
           className='input'

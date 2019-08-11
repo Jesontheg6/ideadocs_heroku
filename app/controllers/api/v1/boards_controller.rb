@@ -11,7 +11,7 @@ module Api::V1
       @board = current_user.boards.create! board_params
       @board.slug = params[:title].downcase.gsub! ' ', '-'
       if @board.save
-        ActionCable.server.broadcast "board_channel_#{params[:slug]}", parse_json(@board)
+        ActionCable.server.broadcast "board_channel_#{params[:id]}", parse_json(@board)
         json_res 'created', true, { board: parse_json(@board) }, :created
       else
         json_res 'error', false, { error: @board.errors }, :bad_request
@@ -23,7 +23,7 @@ module Api::V1
       if @board
         @board.update_attributes board_params
         @board.slug = params[:title].downcase.gsub! ' ', '-'
-        ActionCable.server.broadcast "board_channel_#{params[:slug]}", parse_json(@board)
+        ActionCable.server.broadcast "board_channel_#{params[:id]}", parse_json(@board)
         json_res 'updated', true, { board: parse_json(@board) }, :ok
       else
         json_res 'error', false, { error: 'board not found' }, :not_found
@@ -33,7 +33,7 @@ module Api::V1
     private
 
     def board_params
-      params.permit(:title, :slug)
+      params.permit(:title, :slug, :id)
     end
   end
 end

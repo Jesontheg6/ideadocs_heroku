@@ -6,7 +6,7 @@ import { put } from '../utils/headers';
 import IdeasContainer from '../ideas/index';
 import toast from '../../constants/toast';
 
-const Board = ({ slug, title }) => {
+const Board = ({ slug, title, id }) => {
     const [boardTitle, setTitle] = useState(title);
     const [editMode, setEditMode] = useState(false);
 
@@ -32,8 +32,8 @@ const Board = ({ slug, title }) => {
     return (
         <div className="title">
             <ActionCableConsumer
-                channel={{ channel: `board_channel_${slug}`, slug }}
-                onReceived={response => { setTitle(response.title); console.log(response) }} />
+                channel={{ channel: `board_channel_${id}`, id }}
+                onReceived={response => setTitle(response.title)} />
             {editMode ?
                 <input
                     defaultValue={boardTitle}
