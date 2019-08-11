@@ -15,7 +15,7 @@ const NavigationAuth = () => (
         <Nav className="navigation">
             <Nav.Link href={ROUTES.LANDING}>Home</Nav.Link>
             <Nav.Link href={ROUTES.BOARDS}>Boards</Nav.Link>
-            <Nav.Link href={ROUTES.IDEAS}>Ideas</Nav.Link>
+            {/* <Nav.Link href={ROUTES.IDEAS}>Ideas</Nav.Link> */}
             <Nav.Link><SignOut /></Nav.Link>
         </Nav>
     </Navbar.Collapse>
@@ -26,7 +26,7 @@ const NavigationNonAuth = () => (
         <Nav className="navigation">
             <Nav.Link href={ROUTES.LANDING}>Home</Nav.Link>
             <Nav.Link href={ROUTES.BOARDS}>Boards</Nav.Link>
-            <Nav.Link href={ROUTES.IDEAS}>Ideas</Nav.Link>
+            {/* <Nav.Link href={ROUTES.IDEAS}>Ideas</Nav.Link> */}
             <Nav.Link href={ROUTES.SIGN_IN}>Sign In</Nav.Link>
         </Nav>
     </Navbar.Collapse>
