@@ -29,22 +29,11 @@ const Board = ({ slug, title }) => {
         }
     };
 
-    const handleBoardEvents = ({ event, board }) => {
-        switch (event) {
-            case 'updated':
-                setTitle(board.title);
-                break;
-            default:
-                toast('warn', 'unhandled event type');
-                console.warn('Unhandled event type');
-        }
-    };
-
     return (
         <div className="title">
             <ActionCableConsumer
-                channel={{ channel: "BoardsChannel" }}
-                onReceived={handleBoardEvents} />
+                channel={{ channel: `board_channel_${slug}`, slug }}
+                onReceived={response => { setTitle(response.title); console.log(response) }} />
             {editMode ?
                 <input
                     defaultValue={boardTitle}

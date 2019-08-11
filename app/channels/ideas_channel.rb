@@ -1,7 +1,7 @@
 class IdeasChannel < ApplicationCable::Channel
   def subscribed
-    @ideas = Board.ideas
-    stream_for @ideas
+    @idea = Idea.find(params[:id])
+    stream_for @idea
   end
 
   def unsubscribed

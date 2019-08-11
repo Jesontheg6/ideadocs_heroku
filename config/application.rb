@@ -22,6 +22,9 @@ module IdeaboardApi
     config.api_only = true
 
     config.action_cable.mount_path = '/cable'
+
+    # set this up during production
+    # config.action_cable.allowed_request_origins =
     config.enable_dependency_loading = true
   end
 end
