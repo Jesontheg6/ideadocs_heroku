@@ -14,7 +14,7 @@ module Api::V1
       @idea.user = current_user
       @idea.board = @board
       if @idea.save
-        ActionCable.server.broadcast @idea, parse_json(@idea)
+        IdeasChannel.broadcast_to @idea, parse_json(@idea)
         json_res 'created', true, { idea: parse_json(@idea) }, :created
       else
         json_res 'error', false, { error: @idea.errors }, :bad_request
@@ -25,7 +25,7 @@ module Api::V1
       @idea = Idea.find params[:id]
       if @idea
         @idea.update_attributes idea_params
-        ActionCable.server.broadcast @idea, parse_json(@idea)
+        IdeasChannel.broadcast_to @idea, parse_json(@idea)
         json_res 'updated', true, { idea: parse_json(@idea) }, :ok
       else
         json_res 'error', false, { error: 'idea not found' }, :not_found
@@ -36,7 +36,7 @@ module Api::V1
       @idea = Idea.find params[:id]
 
       if @idea.destroy
-        ActionCable.server.broadcast @idea, parse_json(@idea)
+        IdeasChannel.broadcast_to @idea, parse_json(@idea)
         head :no_content
       else
         json_res 'error', false, { error: @idea.errors }, :unprocessable_entity

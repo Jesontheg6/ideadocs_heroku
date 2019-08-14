@@ -28,12 +28,12 @@ const Board = ({ slug, title, id }) => {
             renameTitile();
         }
     };
+    const recieveTitle = (response) => {
+        debugger; /* eslint-disable-line */
+    }
 
     return (
         <div className="title">
-            <ActionCableConsumer
-                channel={{ channel: `board_channel_${id}`, id }}
-                onReceived={response => setTitle(response.title)} />
             {editMode ?
                 <input
                     defaultValue={boardTitle}
@@ -44,9 +44,13 @@ const Board = ({ slug, title, id }) => {
                     onClick={() => setEditMode(true)}
                 />
      :
+            <ActionCableConsumer
+                channel={{channel: `board_channel_${id}`, id }}
+                onReceived={recieveTitle}>
                 <div className="titlediv" align="center">
                     <h1 className="boardtitle" onClick={() => setEditMode(true)}>{boardTitle}</h1>
                 </div>
+            </ActionCableConsumer>
             }
             <IdeasContainer slug={slug} />
         </div>

@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import update from 'immutability-helper';
 
 import Idea from './idea';
-import Color from '../utils/color';
+// import Color from '../utils/color';
 import { get, post, del } from '../utils/headers';
 import toast from '../../constants/toast';
 
 const IdeasContainer = ({ slug }) => {
   const [ideas, setIdeas] = useState([]);
   // const [selected, setSelected] = useState('');
-  const [displayColorPicker, setDisplayColorPicker] = useState(false);
+  // const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const url = `/boards/${slug}/ideas`;
   const ideaRef = React.createRef();
   let title = null
@@ -47,13 +47,13 @@ const IdeasContainer = ({ slug }) => {
   // color
   const selectIdea = (enforceFocus = false) => {
     // setSelected(ideaRef);
-    setDisplayColorPicker(true);
+    // setDisplayColorPicker(true);
     if (enforceFocus) title.focus();
   }
 
   const closeBox = () => {
     setTimeout(() => {
-      setDisplayColorPicker(false);
+      // setDisplayColorPicker(false);
     }, 1000);
   }
 
@@ -69,7 +69,7 @@ const IdeasContainer = ({ slug }) => {
           onDelete={deleteIdea}
           // onChangeComplete={handleChangeComplete}
           ref={ideaRef}
-          onClick={selectIdea}
+          // onClick={selectIdea}
           boardSlug={slug}
         />
       )
@@ -82,10 +82,10 @@ const IdeasContainer = ({ slug }) => {
         <div className="newideabtn-div"></div>
         <div className="color-div">
           {/* <div onClick={handleUnselect} /> */}
-          <Color
+          {/* <Color
             className="color-div"
             selected={selectIdea}
-            displayColorPicker={displayColorPicker} />
+            displayColorPicker={displayColorPicker} /> */}
         </div>
         <div className="pretty-div"></div>
       </div>
