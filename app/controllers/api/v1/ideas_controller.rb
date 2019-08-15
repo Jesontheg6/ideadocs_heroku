@@ -8,6 +8,15 @@ module Api::V1
       json_res 'success', true, { ideas: parse_json(@ideas) }, :ok
     end
 
+    def show
+      @idea = @board.ideas.find params[:id]
+      if @idea
+        json_res 'success', true, { idea: parse_json(@idea) }, :ok
+      else
+        json_res 'error', false, { error: @idea.errors }, :not_found
+      end
+    end
+
     def create
       idea_params.merge user_id: current_user.id
       @idea = Idea.new idea_params
@@ -46,7 +55,7 @@ module Api::V1
     private
 
     def idea_params
-      params.permit(:title, :body, :color)
+      params.permit :title, :body, :color
     end
 
     def set_board

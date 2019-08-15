@@ -7,11 +7,20 @@ module Api::V1
       json_res 'success', true, { boards: parse_json(@boards) }, :ok
     end
 
+    def show
+      @board = current_user.boards.find_by title: params[:slug].gsub!('-', ' ')
+      if @board
+        json_res 'success', true, { board: parse_json(@board) }, :ok
+      else
+        json_res 'error', false, { error: @board.errors }, :not_found
+      end
+    end
+
     def create
       @board = current_user.boards.create! board_params
       @board.slug = params[:title].downcase.gsub! ' ', '-'
       if @board.save
-        ActionCable.server.broadcast "board_channel_#{params[:id]}", parse_json(@board)
+        BoardsChannel.broadcast_to @board, parse_json(@board)
         json_res 'created', true, { board: parse_json(@board) }, :created
       else
         json_res 'error', false, { error: @board.errors }, :bad_request
@@ -23,17 +32,27 @@ module Api::V1
       if @board
         @board.update_attributes board_params
         @board.slug = params[:title].downcase.gsub! ' ', '-'
-        ActionCable.server.broadcast "board_channel_#{params[:id]}", parse_json(@board)
+        BoardsChannel.broadcast_to @board, parse_json(@board)
         json_res 'updated', true, { board: parse_json(@board) }, :ok
       else
         json_res 'error', false, { error: 'board not found' }, :not_found
       end
     end
 
+    def destroy
+      @board = Board.find_by title: params[:slug].gsub!('-', ' ')
+      if @board.destroy
+        BoardsChannel.broadcast_to @board, parse_json(@board)
+        head :no_content
+      else
+        json_res 'error', false, { error: @board.errors }, :unprocessable_entity
+      end
+    end
+
     private
 
     def board_params
-      params.permit(:title, :slug, :id)
+      params.permit :title, :slug, :id
     end
   end
 end

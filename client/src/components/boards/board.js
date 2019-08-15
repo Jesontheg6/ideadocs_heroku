@@ -1,60 +1,101 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ActionCableConsumer } from 'react-actioncable-provider';
-import { debounce } from 'lodash';
+import { withRouter } from 'react-router-dom';
+import { Form, Modal, Button } from 'react-bootstrap';
 
-import { put } from '../utils/headers';
+import { put, get, del } from '../utils/headers';
 import IdeasContainer from '../ideas/index';
 import toast from '../../constants/toast';
+import * as ROUTES from '../../constants/routes';
 
-const Board = ({ slug, title, id }) => {
-    const [boardTitle, setTitle] = useState(title);
-    const [editMode, setEditMode] = useState(false);
+const Board = (props) => {
+  const [editMode, setEditMode] = useState(false);
+  const [title, setTitle] = useState('');
+  const [id, setId] = useState('');
+  const [slug, setSlug] = useState(props.match.params.slug)
 
-    const renameTitile = () => {
-        put(`/boards/${slug}`, { title: boardTitle })
-            .then(res => toast('success', 'board renamed'))
-            .catch(error => toast('error', error))
-    };
+  useEffect(() => {
+    get(`/boards/${slug}`)
+      .then(res => {
+        setTitle(res.data.board.title);
+        setId(res.data.board.id);
+      })
+      .catch(err => {
+        toast('error', err);
+        props.history.push(ROUTES.BOARDS);
+      });
+  }, [slug, props.history]);
 
-    const handleTitleChange = e => {
-        setTitle(e.target.value);
-        debounce(() => { renameTitile() }, 500, { trailing: true })
+  const renameTitile = e => {
+    e.preventDefault();
+    put(`/boards/${slug}`, { title: title })
+      .then(res => toast('success', 'board renamed'))
+      .catch(error => toast('error', error));
+    setEditMode(false);
+  };
+
+  const handleTitleChange = e => {
+    setTitle(e.target.value);
+  }
+
+  const handleKey = e => {
+    if (e.key === 'Enter') {
+      setTitle(e.target.value);
+      setEditMode(false);
     }
+  };
+  const handleDelete = () => {
+    del(`/boards/${slug}`)
+      .then(res => toast('success', 'board deleted'))
+      .catch(err => toast('error', err));
+    props.history.push(ROUTES.BOARDS)
+  };
 
-    const handleKey = (e) => {
-        if (e.key === 'Enter') {
-            setTitle(e.target.value);
-            setEditMode(false);
-            renameTitile();
-        }
-    };
-    const recieveTitle = (response) => {
-        debugger; /* eslint-disable-line */
-    }
+  const recieveTitle = (board) => {
+    setTitle(board.title);
+    setSlug(board.slug);
+  }
 
-    return (
-        <div className="title">
-            {editMode ?
-                <input
-                    defaultValue={boardTitle}
-                    onChange={handleTitleChange}
-                    onBlur={() => setEditMode(false)}
-                    onKeyDown={handleKey}
-                    style={{ width: "100%", height: "30px", fontSize: "30px" }}
-                    onClick={() => setEditMode(true)}
-                />
-     :
-            <ActionCableConsumer
-                channel={{channel: `board_channel_${id}`, id }}
-                onReceived={recieveTitle}>
-                <div className="titlediv" align="center">
-                    <h1 className="boardtitle" onClick={() => setEditMode(true)}>{boardTitle}</h1>
-                </div>
-            </ActionCableConsumer>
-            }
-            <IdeasContainer slug={slug} />
+  return (
+    <div className="title">
+      <Button variant="link" onClick={() => props.history.push(ROUTES.BOARDS)}>Back to Boards</Button>
+      <ActionCableConsumer
+        channel={{ channel: 'BoardsChannel', id: id }}
+        onReceived={recieveTitle}>
+        <div className="titlediv" align="center">
+          <h1 className="title" onClick={() => setEditMode(true)}>{title}</h1>
         </div>
-    )
+      </ActionCableConsumer>
+      <IdeasContainer slug={slug} />
+      <Modal show={editMode} onHide={() => setEditMode(false)}>
+        <Form onSubmit={renameTitile}>
+          <Modal.Header closeButton>
+            <Modal.Title>Edit Board</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Control
+              type="text"
+              name="title"
+              defaultValue={title}
+              onChange={handleTitleChange}
+              onKeyPress={handleKey}
+            />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="outline-secondary" onClick={() => setEditMode(false)}>
+              Close
+            </Button>
+            <Button variant="outline-danger" onClick={handleDelete} >
+              Delete
+            </Button>
+            <Button variant="outline-primary" type="submit" >
+              Edit
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
+    </div>
+  )
 };
 
-export default Board;
+export default withRouter(Board);

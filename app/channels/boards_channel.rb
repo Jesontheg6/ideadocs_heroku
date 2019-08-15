@@ -1,6 +1,7 @@
 class BoardsChannel < ApplicationCable::Channel
   def subscribed
-    stream_from "board_channel_#{params[:id]}"
+    @board = Board.find params[:id]
+    stream_for @board
   end
 
   def unsubscribed

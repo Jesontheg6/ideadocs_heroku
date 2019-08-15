@@ -1,14 +1,13 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Container, Button, Form, Col, InputGroup } from 'react-bootstrap';
-import { FirebaseContext } from '../../utils/firebase';
+import { withFirebase } from '../../utils/firebase';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 import * as ROUTES from '../../constants/routes';
 import toast from '../../constants/toast';
 
-const SignUp = ({history}) => {
-    const firebase = useContext(FirebaseContext);
+const SignUp = ({history, firebase}) => {
     const [validated, setValidated] = useState(false);
     const [confirmError, setConfirmError] = useState('');
     let pass = React.createRef();
@@ -149,4 +148,4 @@ export const SignUpLink = () => (
     </p>
 );
 
-export default SignUp;
+export default withFirebase(SignUp);

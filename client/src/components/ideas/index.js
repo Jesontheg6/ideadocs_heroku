@@ -31,7 +31,7 @@ const IdeasContainer = ({ slug }) => {
           setIdeas(update(ideas, { $push: [response.data.idea] }));
         }
       })
-      .catch(error => toast('error', error));
+      .catch(error => { if (error.status !== 500) toast('error', error.response.data.error) });
   }
 
   const deleteIdea = id => {
@@ -41,7 +41,7 @@ const IdeasContainer = ({ slug }) => {
         setIdeas(update(ideas, { $splice: [[ideaIndex, 1]] }));
         toast('success', 'item deleted')
       })
-      .catch(error => toast('error', error));
+      .catch(error => { if (error.status !== 500) toast('error', error.response.data.error) });
   }
 
 

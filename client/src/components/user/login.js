@@ -1,15 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import axios from 'axios';
 import { Button, Container, Form } from 'react-bootstrap';
 import toast from '../../constants/toast';
 
-import { FirebaseContext } from '../../utils/firebase';
+import { withFirebase } from '../../utils/firebase';
 import { SignUpLink } from './signup';
 import * as ROUTES from '../../constants/routes';
 
-const Login = ({ history }) => {
-    const firebase = useContext(FirebaseContext);
-
+const Login = ({ history, firebase }) => {
     const handleLogin = e => {
         e.preventDefault();
         const email = e.target.email.value;
@@ -53,4 +51,4 @@ const Login = ({ history }) => {
     </Container>
 };
 
-export default Login;
+export default withFirebase(Login);

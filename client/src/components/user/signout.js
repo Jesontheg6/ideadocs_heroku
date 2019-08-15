@@ -1,11 +1,10 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Button } from 'react-bootstrap';
-import { FirebaseContext } from '../../utils/firebase';
+import { withFirebase } from '../../utils/firebase';
 import toast from "../../constants/toast";
 import axios from 'axios';
 
-const SignOut = () => {
-    const firebase = useContext(FirebaseContext);
+const SignOut = ({firebase}) => {
     const handleLogout = () => {
         firebase.doSignOut();
         //invalidate token on our backend
@@ -14,4 +13,4 @@ const SignOut = () => {
     return (<Button variant="outline-primary" onClick={handleLogout}>Sign Out</Button>);
 }
 
-export default SignOut;
+export default withFirebase(SignOut);
