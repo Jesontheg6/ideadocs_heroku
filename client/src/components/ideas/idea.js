@@ -109,7 +109,8 @@ class Idea extends Component {
             <Form.Group>
               <Form.Label>Body</Form.Label>
               <Form.Control
-                type="text"
+                as="textarea"
+                rows="4"
                 name="body"
                 value={body}
                 onChange={e => this.setState({ body: e.target.value })}
