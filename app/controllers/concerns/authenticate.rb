@@ -27,8 +27,22 @@ module Authenticate
                                aud: firebase_project_id,
                                verify_iss: true,
                                iss: "https://securetoken.google.com/#{firebase_project_id}"
-    return unless decoded_token
+    if decoded_token
+      @current_user = {
+        id: decoded_token[0]['user_id'],
+        email: decoded_token[0]['email'],
+        expiry: decoded_token[0]['exp']
+      }
+      cookies.signed['user_id'] = @current_user[:id]
+      cookies.signed['user_email'] = @current_user[:email]
+      cookies.signed['user_expires_at'] = @current_user[:expiry]
+      return @current_user
+    else
 
-    @current_user_id = decoded_token[0]['user_id']
+      cookies.delete 'user_id'
+      cookies.delete 'email'
+      cookies.delete 'user_expires_at'
+      return false
+    end
   end
 end

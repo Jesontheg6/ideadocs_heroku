@@ -16,6 +16,8 @@ Bundler.require(*Rails.groups)
 
 module IdeaboardApi
   class Application < Rails::Application
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore, key: '_ideadocs_session'
     config.load_defaults 5.2
 
     config.api_only = true

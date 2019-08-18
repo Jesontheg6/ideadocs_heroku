@@ -1,5 +1,6 @@
 module Api::V1
   class IdeasController < ApplicationController
+    include ActionController::Cookies
     before_action :set_board
 
     def index

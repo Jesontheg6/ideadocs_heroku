@@ -1,14 +1,15 @@
 module Api::V1
   class BoardsController < ApplicationController
+    include ActionController::Cookies
     before_action :current_user
 
     def index
-      @boards = Board.where user_id: @current_user_id
+      @boards = Board.where user_id: @current_user[:id]
       json_res 'success', true, { boards: parse_json(@boards) }, :ok
     end
 
     def show
-      @board = Board.find_by title: params[:slug].gsub!('-', ' '), user_id: @current_user_id
+      @board = Board.find_by title: params[:slug].gsub!('-', ' '), user_id: @current_user[:id]
       if @board
         json_res 'success', true, { board: parse_json(@board) }, :ok
       else
@@ -18,7 +19,7 @@ module Api::V1
 
     def create
       @board = Board.new board_params
-      @board.user_id = @current_user_id
+      @board.user_id = @current_user[:id]
       @board.slug = params[:title].downcase.gsub! ' ', '-'
       if @board.save
         BoardsChannel.broadcast_to @board, parse_json(@board)
