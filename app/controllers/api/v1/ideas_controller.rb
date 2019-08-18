@@ -22,6 +22,7 @@ module Api::V1
       @idea.board = @board
       if @idea.save
         IdeasChannel.broadcast_to @idea, parse_json(@idea)
+        BoardsChannel.broadcast_to @board, parse_json(@board)
         json_res 'created', true, { idea: parse_json(@idea) }, :created
       else
         json_res 'error', false, { error: @idea.errors }, :bad_request
@@ -44,6 +45,7 @@ module Api::V1
 
       if @idea.destroy
         IdeasChannel.broadcast_to @idea, parse_json(@idea)
+        BoardsChannel.broadcast_to @board, parse_json(@board)
         head :no_content
       else
         json_res 'error', false, { error: @idea.errors }, :unprocessable_entity

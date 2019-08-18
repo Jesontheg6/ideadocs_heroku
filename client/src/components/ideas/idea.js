@@ -59,9 +59,11 @@ class Idea extends Component {
 
     if (title !== prevProps.title) {
       this.setState({ title })
-    } else if (body !== prevProps.body) {
+    }
+    if (body !== prevProps.body) {
       this.setState({ body });
-    } else {
+    }
+    if (color !== prevProps.color){
       this.setState({ color });
     }
   };

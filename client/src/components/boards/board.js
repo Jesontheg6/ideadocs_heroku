@@ -21,7 +21,7 @@ const Board = (props) => {
         setId(res.data.board.id);
       })
       .catch(err => {
-        toast('error', err.data.error);
+        toast('error', err.response.data.error);
         props.history.push(ROUTES.BOARDS);
       });
   }, [slug, props.history]);
@@ -66,7 +66,7 @@ const Board = (props) => {
           <h1 className="title" onClick={() => setEditMode(true)}>{title}</h1>
         </div>
       </ActionCableConsumer>
-      <IdeasContainer slug={slug} />
+      <IdeasContainer slug={slug} bId={id} />
       <Modal show={editMode} onHide={() => setEditMode(false)}>
         <Form onSubmit={renameTitile}>
           <Modal.Header closeButton>

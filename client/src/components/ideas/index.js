@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { ActionCableConsumer } from 'react-actioncable-provider';
 import update from 'immutability-helper';
 
 import Idea from './idea';
 import { get, post, del } from '../utils/headers';
 import toast from '../../constants/toast';
 
-const IdeasContainer = ({ slug }) => {
+const IdeasContainer = ({ slug, bId }) => {
   const [ideas, setIdeas] = useState([]);
   const url = `/boards/${slug}/ideas`;
   const ideaRef = React.createRef();
@@ -13,7 +14,7 @@ const IdeasContainer = ({ slug }) => {
   useEffect(() => {
     get(url)
       .then(response => setIdeas(response.data.ideas))
-      .catch(error => toast('error', error.data.error));
+      .catch(error => toast('error', error.response.data.error));
   }, []); /* eslint-disable-line */
 
   const addNewIdea = () => {
@@ -60,9 +61,17 @@ const IdeasContainer = ({ slug }) => {
     })
   };
 
+  const recieveIdeas = (board) => {
+    setIdeas(board.ideas)
+  }
+
   return (
     <div className="App-header">
-      {renderIdeas()}
+      <ActionCableConsumer
+        channel={{ channel: 'BoardsChannel', id: bId }}
+        onReceived={recieveIdeas}>
+        {renderIdeas()}
+      </ActionCableConsumer>
       <button className="newButton newIdeaButton" onClick={addNewIdea}>+</button>
     </div>
   )
