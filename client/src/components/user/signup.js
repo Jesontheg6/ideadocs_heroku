@@ -31,7 +31,7 @@ const SignUp = ({history, firebase}) => {
                         toast('success', `${username} Signed up.`)
                         history.push(ROUTES.BOARDS)
                     })
-                    .catch(error => toast('error', error))
+                    .catch(error => toast('error', error.message))
             })
             .catch(error => {
                 toast('error', error.message)

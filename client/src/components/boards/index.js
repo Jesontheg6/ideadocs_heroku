@@ -19,7 +19,7 @@ const BoardTitle = ({history}) => {
   const getBoards = () => {
     get('/boards')
       .then(response => setBoards(response.data.boards))
-      .catch(error => toast('error', error));
+      .catch(error => toast('error', error.data.error));
   }
 
   const handleClose = () => {
@@ -35,7 +35,7 @@ const BoardTitle = ({history}) => {
     const title = e.target.newBoard.value;
     post('/boards', { title })
       .then(res => { toast('success', title + ' board added'); getBoards(); })
-      .catch(error => { toast('error', error) });
+      .catch(error => { toast('error', error.data.error) });
     handleClose();
   }
 

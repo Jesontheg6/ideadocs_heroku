@@ -21,7 +21,7 @@ const Board = (props) => {
         setId(res.data.board.id);
       })
       .catch(err => {
-        toast('error', err);
+        toast('error', err.data.error);
         props.history.push(ROUTES.BOARDS);
       });
   }, [slug, props.history]);
@@ -30,7 +30,7 @@ const Board = (props) => {
     e.preventDefault();
     put(`/boards/${slug}`, { title: title })
       .then(res => toast('success', 'board renamed'))
-      .catch(error => toast('error', error));
+      .catch(error => toast('error', error.data.error));
     setEditMode(false);
   };
 
@@ -47,7 +47,7 @@ const Board = (props) => {
   const handleDelete = () => {
     del(`/boards/${slug}`)
       .then(res => toast('success', 'board deleted'))
-      .catch(err => toast('error', err));
+      .catch(err => toast('error', err.data.error));
     props.history.push(ROUTES.BOARDS)
   };
 

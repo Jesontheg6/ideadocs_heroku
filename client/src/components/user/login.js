@@ -18,7 +18,7 @@ const Login = ({ history, firebase }) => {
                 history.push(ROUTES.LANDING);
             })
             .catch(error => {
-                toast('error', error);
+                toast('error', error.message);
             });
     }
     return <Container style={{ width: '50%' }}>

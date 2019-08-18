@@ -27,7 +27,7 @@ class Firebase {
         user.getIdToken(true).then(token => {
           // Save token for our backend
           sessionStorage.setItem('token', token);
-        }).catch(err => toast('error', err));
+        }).catch(err => toast('error', err.message));
       } else {
         // No user is signed in.
         sessionStorage.removeItem('token');

@@ -40,7 +40,7 @@ class Idea extends Component {
       }
     )
       .then(response => { toast('success', 'updated item') })
-      .catch(error => { toast('error', error) });
+      .catch(error => { toast('error', error.data.error) });
     this.onToggleModal();
   };
 
