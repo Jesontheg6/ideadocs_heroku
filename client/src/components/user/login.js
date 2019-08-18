@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { Button, Container, Form } from 'react-bootstrap';
 import toast from '../../constants/toast';
 
@@ -14,22 +13,12 @@ const Login = ({ history, firebase }) => {
         const password = e.target.password.value;
         firebase
             .doSignInWithEmailAndPassword(email,password)
-            .then(() => {
-                // log in user to backend to get token
-                axios.post('/login', {
-                    email,
-                    password,
-                }).then(response => {
-                    sessionStorage.setItem('token', JSON.stringify(response.headers.authorization));
-                    console.log(response.data);
-                    toast('success', `you are logged in ${response.data.user.username}`);
-                    history.push(ROUTES.LANDING);
-                }).catch(error => {
-                    toast('error', error.data.message);
-                })
+            .then(response => {
+                toast('success', `you are logged in ${response.user.displayName || response.user.email}`);
+                history.push(ROUTES.LANDING);
             })
             .catch(error => {
-                toast('error', error.message);
+                toast('error', error);
             });
     }
     return <Container style={{ width: '50%' }}>

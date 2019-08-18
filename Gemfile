@@ -58,5 +58,6 @@ gem 'omniauth'
 gem 'rack-cors', require: 'rack/cors'
 # for serializing our JSON response
 gem 'active_model_serializers', '~> 0.10.0'
+gem 'http'
 # for token authentication
 gem 'jwt'

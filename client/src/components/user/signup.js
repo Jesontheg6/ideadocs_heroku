@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Container, Button, Form, Col, InputGroup } from 'react-bootstrap';
 import { withFirebase } from '../../utils/firebase';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 
 import * as ROUTES from '../../constants/routes';
 import toast from '../../constants/toast';
@@ -21,36 +20,15 @@ const SignUp = ({history, firebase}) => {
         const email = form.elements.email.value;
         const password = form.elements.password.value;
         const username = form.elements.username.value;
-        const firstname = form.elements.firstname.value;
-        const lastname = form.elements.lastname.value;
-        const password_confirmation = form.elements.confirmation.value;
 
         setValidated(true);
         firebase
             .doCreateUserWithEmailAndPassword(email, password)
-            .then(authUser => {
-                // create our user as well as on the backend
-                axios.post('/signup', {
-                    email,
-                    password,
-                    password_confirmation,
-                    firstname,
-                    lastname,
-                    username
-                }).then(res => {
-                    toast('success', res.data.message);
-                    // we log users out after sign up so that we can
-                    // get token from backend when they log in.
-                    firebase.doSignOut();
-                    history.push(ROUTES.SIGN_IN);
-                }).catch(err => handleErrors(err));
-            }).catch(error => handleErrors(error))
-    };
-
-    const handleErrors = error => {
-        toast('error', error)
-        console.log(error.code, error.message);
-    };
+            .then(authUser => authUser.updateProfile({ displayName: username })
+                .then(res => toast('success', `${username} Signed up.`))
+                .catch(error => toast('error', error)))
+            .catch(error => toast('error', error));
+    }
 
     const handleConfirmChange = e => {
         if (pass.current.value !== e.target.value) {
@@ -62,50 +40,24 @@ const SignUp = ({history, firebase}) => {
 
     return <Container style={{ width: '60%' }}>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
-            <Form.Row>
-                <Form.Group as={Col} md="4" controlId="firstname">
-                    <Form.Label>First Name</Form.Label>
+            <Form.Group as={Col} md="4" controlId="username">
+                <Form.Label>Username</Form.Label>
+                <InputGroup>
+                    <InputGroup.Prepend>
+                        <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
+                    </InputGroup.Prepend>
                     <Form.Control
-                        required
                         type="text"
-                        placeholder="First Name"
+                        placeholder="Username"
+                        aria-describedby="inputGroupPrepend"
+                        required
                     />
                     <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                     <Form.Control.Feedback type="invalid">
-                        Please enter a name.
+                        Please choose a username.
                     </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group as={Col} md="4" controlId="lastname">
-                    <Form.Label>Last name</Form.Label>
-                    <Form.Control
-                        required
-                        type="text"
-                        placeholder="Last Name"
-                    />
-                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                    <Form.Control.Feedback type="invalid">
-                        Please enter a name.
-                    </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group as={Col} md="4" controlId="username">
-                    <Form.Label>Username</Form.Label>
-                    <InputGroup>
-                        <InputGroup.Prepend>
-                            <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
-                        </InputGroup.Prepend>
-                        <Form.Control
-                            type="text"
-                            placeholder="Username"
-                            aria-describedby="inputGroupPrepend"
-                            required
-                        />
-                        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">
-                            Please choose a username.
-                        </Form.Control.Feedback>
-                    </InputGroup>
-                </Form.Group>
-            </Form.Row>
+                </InputGroup>
+            </Form.Group>
             <Form.Group controlId="email">
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="email" placeholder="Email" required />

@@ -1,8 +1,8 @@
 class ApplicationController < ActionController::API
   include ActionController::MimeResponds
+  include Authenticate
   include Response
   include SerializableResource
-  respond_to :json
 
   def fallback_index_html
     render file: 'public/index.html'

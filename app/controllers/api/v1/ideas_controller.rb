@@ -1,6 +1,5 @@
 module Api::V1
   class IdeasController < ApplicationController
-    before_action :authenticate_user!
     before_action :set_board
 
     def index
@@ -18,9 +17,7 @@ module Api::V1
     end
 
     def create
-      idea_params.merge user_id: current_user.id
       @idea = Idea.new idea_params
-      @idea.user = current_user
       @idea.board = @board
       if @idea.save
         IdeasChannel.broadcast_to @idea, parse_json(@idea)

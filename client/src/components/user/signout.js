@@ -1,16 +1,15 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
-import { withFirebase } from '../../utils/firebase';
-import toast from "../../constants/toast";
-import axios from 'axios';
+import { withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 
-const SignOut = ({firebase}) => {
-    const handleLogout = () => {
-        firebase.doSignOut();
-        //invalidate token on our backend
-        axios.delete('/logout').then(toast('info', 'signed out'));
-    };
-    return (<Button variant="outline-primary" onClick={handleLogout}>Sign Out</Button>);
+import { withFirebase } from '../../utils/firebase';
+import toast from '../../constants/toast';
+import * as ROUTES from '../../constants/routes';
+
+const SignOut = ({firebase, history}) => {
+    const handleLogout = () => firebase.doSignOut().then((res) => toast('info', 'signed out'), history.push(ROUTES.SIGN_IN));
+    return <Button variant="outline-primary" onClick={handleLogout}>Sign Out</Button>;
 }
 
-export default withFirebase(SignOut);
+export default compose(withRouter,withFirebase)(SignOut);

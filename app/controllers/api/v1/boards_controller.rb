@@ -1,14 +1,14 @@
 module Api::V1
   class BoardsController < ApplicationController
-    before_action :authenticate_user!
+    before_action :current_user
 
     def index
-      @boards = current_user.boards
+      @boards = Board.where user_id: @current_user_id
       json_res 'success', true, { boards: parse_json(@boards) }, :ok
     end
 
     def show
-      @board = current_user.boards.find_by title: params[:slug].gsub!('-', ' ')
+      @board = Board.find_by title: params[:slug].gsub!('-', ' '), user_id: @current_user_id
       if @board
         json_res 'success', true, { board: parse_json(@board) }, :ok
       else
@@ -17,7 +17,8 @@ module Api::V1
     end
 
     def create
-      @board = current_user.boards.create! board_params
+      @board = Board.new board_params
+      @board.user_id = @current_user_id
       @board.slug = params[:title].downcase.gsub! ' ', '-'
       if @board.save
         BoardsChannel.broadcast_to @board, parse_json(@board)

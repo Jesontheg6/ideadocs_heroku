@@ -1,5 +1,8 @@
-import app from 'firebase/app';
 import 'firebase/auth';
+
+import app from 'firebase/app';
+
+import toast from '../../constants/toast';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -16,6 +19,20 @@ class Firebase {
   constructor() {
     app.initializeApp(firebaseConfig);
     this.auth = app.auth();
+    // use firebase observer to set token to local state that we will use to
+    // verify on the backend
+    this.auth.onAuthStateChanged(user => {
+      if (user) {
+        // User is signed in.
+        user.getIdToken(true).then(token => {
+          // Save token for our backend
+          sessionStorage.setItem('token', token);
+        }).catch(err => toast('error', err));
+      } else {
+        // No user is signed in.
+        sessionStorage.removeItem('token');
+      }
+    });
   }
   // *** Auth API ***
   doCreateUserWithEmailAndPassword = (email, password) =>
