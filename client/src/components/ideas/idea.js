@@ -52,6 +52,7 @@ class Idea extends Component {
     const {
       title,
       body,
+      color,
     } = idea;
 
     const { prevProps } = this.state;
@@ -60,6 +61,8 @@ class Idea extends Component {
       this.setState({ title })
     } else if (body !== prevProps.body) {
       this.setState({ body });
+    } else {
+      this.setState({ color });
     }
   };
 
