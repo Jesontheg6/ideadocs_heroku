@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { compose } from 'recompose';
 import { Container, Button, Form, Col, InputGroup } from 'react-bootstrap';
-import { withFirebase } from '../../utils/firebase';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
+import { withFirebase } from '../../utils/firebase';
 import * as ROUTES from '../../constants/routes';
 import toast from '../../constants/toast';
 
@@ -24,10 +25,17 @@ const SignUp = ({history, firebase}) => {
         setValidated(true);
         firebase
             .doCreateUserWithEmailAndPassword(email, password)
-            .then(authUser => authUser.updateProfile({ displayName: username })
-                .then(res => toast('success', `${username} Signed up.`))
-                .catch(error => toast('error', error)))
-            .catch(error => toast('error', error));
+            .then(authUser => {
+                authUser.user.updateProfile({ displayName: username })
+                    .then(res => {
+                        toast('success', `${username} Signed up.`)
+                        history.push(ROUTES.BOARDS)
+                    })
+                    .catch(error => toast('error', error))
+            })
+            .catch(error => {
+                toast('error', error.message)
+            });
     }
 
     const handleConfirmChange = e => {
@@ -100,4 +108,4 @@ export const SignUpLink = () => (
     </p>
 );
 
-export default withFirebase(SignUp);
+export default compose(withRouter,withFirebase)(SignUp);
