@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_07_204056) do
+ActiveRecord::Schema.define(version: 2019_08_18_112248) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,8 +19,7 @@ ActiveRecord::Schema.define(version: 2019_08_07_204056) do
     t.string "title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id"
-    t.index ["user_id"], name: "index_boards_on_user_id"
+    t.string "user_id"
   end
 
   create_table "ideas", force: :cascade do |t|
@@ -30,38 +29,8 @@ ActiveRecord::Schema.define(version: 2019_08_07_204056) do
     t.datetime "updated_at", null: false
     t.string "color"
     t.bigint "board_id"
-    t.bigint "user_id"
     t.index ["board_id"], name: "index_ideas_on_board_id"
-    t.index ["user_id"], name: "index_ideas_on_user_id"
   end
 
-  create_table "jwt_blacklist", force: :cascade do |t|
-    t.string "jti", null: false
-    t.datetime "exp", null: false
-    t.index ["jti"], name: "index_jwt_blacklist_on_jti"
-  end
-
-  create_table "users", force: :cascade do |t|
-    t.string "firstname", default: "", null: false
-    t.string "lastname", default: "", null: false
-    t.string "username", default: "", null: false
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.inet "current_sign_in_ip"
-    t.inet "last_sign_in_ip"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-  end
-
-  add_foreign_key "boards", "users"
   add_foreign_key "ideas", "boards"
-  add_foreign_key "ideas", "users"
 end

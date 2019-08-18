@@ -59,4 +59,4 @@ gem 'rack-cors', require: 'rack/cors'
 # for serializing our JSON response
 gem 'active_model_serializers', '~> 0.10.0'
 # for token authentication
-gem 'devise-jwt', '~> 0.5.9'
+gem 'jwt'
