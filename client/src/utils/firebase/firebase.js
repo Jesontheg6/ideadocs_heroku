@@ -1,24 +1,25 @@
 import 'firebase/auth';
-
+import 'firebase/firestore';
 import app from 'firebase/app';
 
 import toast from '../../constants/toast';
 
 // Firebase configuration
 const firebaseConfig = {
-    apiKey: process.env.REACT_APP_FIRE_API_KEY,
-    authDomain: process.env.REACT_APP_FIRE_AUTH_DOMIAN,
-    databaseURL: process.env.REACT_APP_FIRE_DATABASE_URL,
-    projectId: process.env.REACT_APP_FIRE_PROJECT_ID,
-    storageBucket: process.env.REACT_APP_FIRE_STORAGE_BUCKET,
-    messagingSenderId: process.env.REACT_APP_FIRE_MESSAGING_SENDER_ID,
-    appId: process.env.REACT_APP_FIRE_APP_ID
-  };
+  apiKey: process.env.REACT_APP_FIRE_API_KEY,
+  authDomain: process.env.REACT_APP_FIRE_AUTH_DOMIAN,
+  databaseURL: process.env.REACT_APP_FIRE_DATABASE_URL,
+  projectId: process.env.REACT_APP_FIRE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIRE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIRE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIRE_APP_ID
+};
 
 class Firebase {
   constructor() {
     app.initializeApp(firebaseConfig);
     this.auth = app.auth();
+    this.db = app.firestore();
     // use firebase observer to set token to local state that we will use to
     // verify on the backend
     this.auth.onAuthStateChanged(user => {
@@ -45,8 +46,14 @@ class Firebase {
 
   doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
 
-  doPasswordUpdate = password =>
-    this.auth.currentUser.updatePassword(password);
+  doPasswordUpdate = password => this.auth.currentUser.updatePassword(password);
+
+  doAddUserToDb = ({ id, email, username, firstname, lastname }) => this.db.collection('users').doc(id).set({
+      username: username,
+      email: email,
+      firstname: firstname,
+      lastname: lastname
+    });
 };
 
 export default Firebase;

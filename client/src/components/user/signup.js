@@ -7,7 +7,7 @@ import { withFirebase } from '../../utils/firebase';
 import * as ROUTES from '../../constants/routes';
 import toast from '../../constants/toast';
 
-const SignUp = ({history, firebase}) => {
+const SignUp = ({ history, firebase }) => {
     const [validated, setValidated] = useState(false);
     const [confirmError, setConfirmError] = useState('');
     let pass = React.createRef();
@@ -21,6 +21,8 @@ const SignUp = ({history, firebase}) => {
         const email = form.elements.email.value;
         const password = form.elements.password.value;
         const username = form.elements.username.value;
+        const firstname = form.elements.firstname.value;
+        const lastname = form.elements.lastname.value;
 
         setValidated(true);
         firebase
@@ -32,6 +34,16 @@ const SignUp = ({history, firebase}) => {
                         history.push(ROUTES.BOARDS)
                     })
                     .catch(error => toast('error', error.message))
+                    const dbUser = {
+                        id: authUser.user.uid,
+                        email,
+                        username,
+                        firstname,
+                        lastname,
+                      }
+                firebase.doAddUserToDb({ ...dbUser })
+                .then(res => toast('success', `${username} successfully saved to db.`))
+                .catch(err => toast('error', err.message));
             })
             .catch(error => {
                 toast('error', error.message)
@@ -48,24 +60,50 @@ const SignUp = ({history, firebase}) => {
 
     return <Container style={{ width: '60%' }}>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
-            <Form.Group as={Col} md="4" controlId="username">
-                <Form.Label>Username</Form.Label>
-                <InputGroup>
-                    <InputGroup.Prepend>
-                        <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
-                    </InputGroup.Prepend>
+            <Form.Row>
+                <Form.Group as={Col} md="4" controlId="firstname">
+                    <Form.Label>First Name</Form.Label>
                     <Form.Control
-                        type="text"
-                        placeholder="Username"
-                        aria-describedby="inputGroupPrepend"
                         required
+                        type="text"
+                        placeholder="First Name"
                     />
                     <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                     <Form.Control.Feedback type="invalid">
-                        Please choose a username.
+                        Please enter a name.
                     </Form.Control.Feedback>
-                </InputGroup>
-            </Form.Group>
+                </Form.Group>
+                <Form.Group as={Col} md="4" controlId="lastname">
+                    <Form.Label>Last name</Form.Label>
+                    <Form.Control
+                        required
+                        type="text"
+                        placeholder="Last Name"
+                    />
+                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                        Please enter a name.
+                    </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group as={Col} md="4" controlId="username">
+                    <Form.Label>Username</Form.Label>
+                    <InputGroup>
+                        <InputGroup.Prepend>
+                            <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <Form.Control
+                            type="text"
+                            placeholder="Username"
+                            aria-describedby="inputGroupPrepend"
+                            required
+                        />
+                        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">
+                            Please choose a username.
+                        </Form.Control.Feedback>
+                    </InputGroup>
+                </Form.Group>
+            </Form.Row>
             <Form.Group controlId="email">
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="email" placeholder="Email" required />

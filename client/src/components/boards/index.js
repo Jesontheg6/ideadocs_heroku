@@ -19,7 +19,7 @@ const BoardTitle = ({history}) => {
   const getBoards = () => {
     get('/boards')
       .then(response => setBoards(response.data.boards))
-      .catch(error => toast('error', error.data.error));
+      .catch(error => toast('error', error.response.data.error));
   }
 
   const handleClose = () => {
